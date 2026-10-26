@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link active" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Guide</div>
+<h1>Getting started</h1>
+<p class="lede">Four steps to your first live transaction: register, get approved, generate your API key pair, and sign your first write request.</p>
+
+<h2 id="step-1-register">Step 1 &mdash; Register as a partner</h2>
+<p>Self-register with your business and representative contact details. This is a public endpoint &mdash; no API key is required yet.</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Register a partner account</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/auth/register</span>
+  </div>
+  <div class="badges"><span class="badge req-public">Public</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Notes</th></tr></thead><tbody><tr><td>firstname</td><td>string</td><td><span class="req-yes">required</span></td><td>2&ndash;50 characters</td></tr><tr><td>lastname</td><td>string</td><td><span class="req-yes">required</span></td><td>2&ndash;50 characters</td></tr><tr><td>email</td><td>string</td><td><span class="req-yes">required</span></td><td>Valid email address, used for login</td></tr><tr><td>password</td><td>string</td><td><span class="req-yes">required</span></td><td>8&ndash;128 chars. Must include uppercase, lowercase, number, and symbol (<code>@$!%*?&amp;</code>)</td></tr><tr><td>phone</td><td>string</td><td><span class="req-yes">required</span></td><td>10&ndash;20 characters, e.g. <code>+2348012345678</code></td></tr><tr><td>companyName</td><td>string</td><td><span class="req-yes">required</span></td><td>2&ndash;100 characters</td></tr><tr><td>contactPerson</td><td>string</td><td><span class="req-yes">required</span></td><td>2&ndash;100 characters</td></tr><tr><td>country</td><td>string</td><td><span class="req-no">optional</span></td><td>Defaults to <code>Nigeria</code></td></tr><tr><td>state</td><td>string</td><td><span class="req-no">optional</span></td><td>State / province</td></tr><tr><td>city</td><td>string</td><td><span class="req-no">optional</span></td><td>City of operation</td></tr><tr><td>address</td><td>string</td><td><span class="req-no">optional</span></td><td>Registered business address</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstname": "Ada",
+    "lastname": "Obi",
+    "email": "ada@merchro.com",
+    "password": "StrongPass1!",
+    "phone": "+2348012345678",
+    "companyName": "Merchro Ltd",
+    "contactPerson": "Ada Obi",
+    "country": "Nigeria",
+    "state": "Lagos",
+    "city": "Ikeja",
+    "address": "12 Commercial Avenue"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await fetch("https://api.billpadi.com/api/v1/partner/auth/register", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    firstname: "Ada",
+    lastname: "Obi",
+    email: "ada@merchro.com",
+    password: "StrongPass1!",
+    phone: "+2348012345678",
+    companyName: "Merchro Ltd",
+    contactPerson: "Ada Obi",
+    country: "Nigeria",
+    state: "Lagos",
+    city: "Ikeja",
+    address: "12 Commercial Avenue"
+  }),
+});
+const data = await res.json();</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 201 Created</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Partner registration successful. Awaiting admin approval.",
+  "data": {
+    "id": "665f1c2a9e1b2c0012a4e9f1",
+    "firstname": "Ada",
+    "lastname": "Obi",
+    "email": "ada@merchro.com",
+    "companyName": "Merchro Ltd",
+    "status": "pending"
+  },
+  "timestamp": "2026-07-10T09:12:41.000Z",
+  "path": "/api/v1/partner/auth/register"
+}</pre></div></div></div>
+
+<h2 id="step-2-approval">Step 2 &mdash; Wait for approval</h2>
+<p>New partner accounts initialize in a <code>pending</code> status. Our compliance team verifies your business credentials and activates your account. API key authentication enforces that your partner status is <code>active</code> before processing live service requests.</p>
+<div class="callout callout-info"><p>You will receive an email confirmation once your partner status is activated. Contact your onboarding account manager if you need expedited verification.</p></div>
+
+<h2 id="step-3-login">Step 3 &mdash; Log in and generate an API key pair</h2>
+<p>Once approved, authenticate with your email and password via standard login to acquire a JWT bearer token for account configuration.</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Log in to your account</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/api/v1/auth/login</span>
+  </div>
+  <div class="badges"><span class="badge req-public">Public</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th></tr></thead><tbody><tr><td>email</td><td>string</td><td><span class="req-yes">required</span></td></tr><tr><td>password</td><td>string</td><td><span class="req-yes">required</span></td></tr></tbody></table></div>
+<p>With your session token, call <code>POST /partner/api-keys</code> to generate your active API key and secret:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Generate or rotate your API key</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/api-keys</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<p>This returns your <code>apiKey</code> (e.g. <code>sk_live_...</code>) and <code>apiSecret</code> in plain text. Store both in your encrypted secret store immediately &mdash; for security, the API secret is hashed in our database and cannot be retrieved again.</p>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/api-keys \
+  -H "Authorization: Bearer &lt;your-login-token&gt;"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Save your API key and secret. You won't see them again.",
+  "data": {
+    "id": "665f20b19e1b2c0012a4ea02",
+    "apiKey": "sk_live_1f9c2a7e4b6d0f83a5c1e9b7d4f2038a...",
+    "apiSecret": "9a3e7c1b5d8f2046e1a9c7b3d5f80261e4a7c9b3d5f80261e4a7c9b3d5f8026"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/api-keys"
+}</pre></div></div></div>
+
+<div class="callout callout-warn"><p>Calling <code>POST /partner/api-keys</code> rotates your credentials. Any previously active API key is immediately revoked.</p></div>
+
+<div class="callout callout-info"><p><strong>Recommended for Live Production:</strong> Whitelist your backend server IP addresses via <code>PUT /partner/ip-whitelist</code>. Once configured, requests from any unauthorized IP are instantly blocked with <code>403 Forbidden</code> even if your API key is compromised.</p></div>
+
+<h2 id="step-4-first-request">Step 4 &mdash; Make your first API request</h2>
+<p>Read operations (such as listing telecom networks or electricity DISCOs) require only the <code>x-api-key</code> header:</p>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/airtime/networks \
+  -H "x-api-key: sk_live_1f9c2a7e4b6d0f83a5c1e9b7d4f2038a..."</pre></div></div></div>
+
+<p>For write actions (airtime top-up, bill payments, payouts, crypto trades), you must sign the JSON body with your <code>apiSecret</code> and pass the HMAC hash in <code>x-signature</code>. Proceed to <a href="authentication.html">Authentication &amp; Signing</a> to view code examples for Node.js, Python, PHP, and Go.</p>
+<div class="pagenav"><a href="index.html"><span class="dir">&larr; Previous</span>Introduction</a><a class="to-right" href="authentication.html"><span class="dir">Next &rarr;</span>Authentication &amp; Signing</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

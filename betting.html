@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Betting Wallet Funding — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link active" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Product &middot; Gaming &amp; Betting</div>
+<h1>Betting Wallet Funding</h1>
+<p class="lede">Verify customer bettor IDs in real time and fund user accounts across all major Nigerian sportsbooks.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/betting</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on verify/fund)</b></div>
+  <div class="receipt-row"><span>Supported Bookmakers</span><b>Bet9ja, SportyBet, 1xBet, BetKing, Merrybet, BangBet, etc.</b></div>
+  <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
+</div>
+
+<h2 id="providers">1. List Betting Bookmakers</h2>
+<p>Query the list of active sportsbooks and their slug codes:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List supported betting providers</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/betting/providers</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/betting/providers \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Betting providers retrieved",
+  "data": [
+    { "id": "64f1b1a1c4d5e6f7a8b9c301", "name": "Bet9ja", "code": "bet9ja" },
+    { "id": "64f1b1a1c4d5e6f7a8b9c302", "name": "SportyBet", "code": "sportybet" },
+    { "id": "64f1b1a1c4d5e6f7a8b9c303", "name": "1xBet", "code": "1xbet" },
+    { "id": "64f1b1a1c4d5e6f7a8b9c304", "name": "BetKing", "code": "betking" },
+    { "id": "64f1b1a1c4d5e6f7a8b9c305", "name": "Merrybet", "code": "merrybet" },
+    { "id": "64f1b1a1c4d5e6f7a8b9c306", "name": "BangBet", "code": "bangbet" }
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/betting/providers"
+}</pre></div></div></div>
+
+<h2 id="verify">2. Verify Betting Customer ID</h2>
+<p>Perform an instant account enquiry to confirm that the customer ID exists and retrieve the customer's registered name:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Verify bettor account ID</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/betting/verify</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>customerId</td><td>string</td><td><span class="req-yes">required</span></td><td>Bettor account/user ID on the bookmaker platform</td></tr><tr><td>providerId</td><td>string</td><td><span class="req-yes">required</span></td><td>Bookmaker slug code (e.g. <code>bet9ja</code>, <code>sportybet</code>) or MongoDB ObjectId</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/betting/verify \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "customerId": "9182734",
+    "providerId": "bet9ja"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/betting/verify", {
+  customerId: "9182734",
+  providerId: "bet9ja"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Account verified",
+  "data": {
+    "customerId": "9182734",
+    "customerName": "ADAOBI OBI",
+    "provider": "bet9ja"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/betting/verify"
+}</pre></div></div></div>
+
+<h2 id="fund">3. Fund Betting Wallet</h2>
+<p>Credit funds to the verified customer betting account:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Fund betting account</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/betting/fund</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>customerId</td><td>string</td><td><span class="req-yes">required</span></td><td>Customer bettor ID</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Funding amount in NGN (positive number, min 100)</td></tr><tr><td>providerId</td><td>string</td><td><span class="req-yes">required</span></td><td>Bookmaker slug code (e.g. <code>bet9ja</code>) or MongoDB ObjectId</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/betting/fund \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "customerId": "9182734",
+    "amount": 2000,
+    "providerId": "bet9ja",
+    "partnerReference": "PR-BET-19022"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Betting wallet funding initiated",
+  "data": {
+    "transactionReference": "TXN_1720603200000_4D5E",
+    "partnerReference": "PR-BET-19022",
+    "status": "pending",
+    "customerId": "9182734",
+    "amount": 2000,
+    "provider": "bet9ja"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/betting/fund"
+}</pre></div></div></div>
+
+<div class="callout callout-info"><p>When the bookmaker acknowledges wallet credit, Billpadi fires a <code>betting.fund.success</code> webhook.</p></div>
+
+<h2 id="transactions">4. Transaction Status &amp; Listing</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get betting transaction status</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/betting/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List betting transactions</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/betting/transactions</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="pagenav"><a href="cabletv.html"><span class="dir">&larr; Previous</span>Cable TV</a><a class="to-right" href="education.html"><span class="dir">Next &rarr;</span>Education (WAEC / JAMB)</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

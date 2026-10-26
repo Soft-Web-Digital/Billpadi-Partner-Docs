@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Top-Up — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link active" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Product &middot; Global Airtime &amp; Data</div>
+<h1>International Top-Up</h1>
+<p class="lede">Send mobile airtime and data bundles to hundreds of destinations worldwide with real-time foreign exchange conversion and carrier routing.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base paths</span><b>/api/v1/partner/intl-airtime &middot; /api/v1/partner/intl-data</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on purchases)</b></div>
+  <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s per namespace</b></div>
+  <div class="receipt-row"><span>Webhooks</span><b><code>international.airtime.success</code> &middot; <code>international.data.success</code></b></div>
+</div>
+
+<h2 id="intl-airtime">Part 1 &mdash; International Airtime</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">List supported countries</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-airtime/countries</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List airtime providers for country</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-airtime/providers</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Query Param</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>countryCode</td><td>string</td><td><span class="req-yes">required</span></td><td>2-letter ISO country code (e.g. <code>GH</code>, <code>KE</code>, <code>GB</code>, <code>US</code>)</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://api.billpadi.com/api/v1/partner/intl-airtime/providers?countryCode=GH" \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Providers retrieved",
+  "data": [
+    { "operatorId": "mtn-gh", "name": "MTN Ghana", "countryCode": "GH" },
+    { "operatorId": "vodafone-gh", "name": "Telecel Ghana", "countryCode": "GH" }
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/intl-airtime/providers"
+}</pre></div></div></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List airtime products / variations</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-airtime/products</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Query Param</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>providerId</td><td>string</td><td><span class="req-yes">required</span></td><td>Operator ID from providers list (e.g. <code>mtn-gh</code>)</td></tr><tr><td>productTypeId</td><td>integer</td><td><span class="req-yes">required</span></td><td>Product type identifier (e.g. <code>1</code> for top-up)</td></tr></tbody></table></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Purchase international airtime</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/intl-airtime/purchase</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>phone</td><td>string</td><td><span class="req-yes">required</span></td><td>Full international MSISDN including country code (e.g. <code>233201234567</code>)</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Amount to send</td></tr><tr><td>countryCode</td><td>string</td><td><span class="req-yes">required</span></td><td>2-letter ISO country code (e.g. <code>GH</code>)</td></tr><tr><td>operatorId</td><td>string</td><td><span class="req-yes">required</span></td><td>Carrier operator ID (e.g. <code>mtn-gh</code>)</td></tr><tr><td>productCode</td><td>string</td><td><span class="req-yes">required</span></td><td>Product code from products catalog</td></tr><tr><td>countryName</td><td>string</td><td><span class="req-no">optional</span></td><td>Country name</td></tr><tr><td>variationCode</td><td>string</td><td><span class="req-no">optional</span></td><td>Denomination/variation code if applicable</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/intl-airtime/purchase \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "phone": "233201234567",
+    "amount": 20,
+    "countryCode": "GH",
+    "countryName": "Ghana",
+    "operatorId": "mtn-gh",
+    "productCode": "mtn-gh-airtime",
+    "partnerReference": "PR-IA-91234"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "International airtime purchase successful",
+  "data": {
+    "transactionReference": "TXN_1720603200000_9C0D",
+    "partnerReference": "PR-IA-91234",
+    "status": "success",
+    "countryCode": "GH",
+    "amount": 20
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/intl-airtime/purchase"
+}</pre></div></div></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get international airtime status</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-airtime/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<h2 id="intl-data">Part 2 &mdash; International Data</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">List supported data countries</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-data/countries</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List data providers for country</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-data/providers</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Query Param</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>countryCode</td><td>string</td><td><span class="req-yes">required</span></td><td>2-letter ISO country code</td></tr></tbody></table></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List international data packages</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-data/products</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Query Param</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>operator</td><td>string</td><td><span class="req-yes">required</span></td><td>Operator slug/ID (e.g. <code>mtn-gh</code>)</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://api.billpadi.com/api/v1/partner/intl-data/products?operator=mtn-gh" \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Products retrieved",
+  "data": [
+    {
+      "productCode": "mtn-gh-1gb",
+      "name": "MTN Ghana 1GB Data",
+      "amount": 15,
+      "validity": "30 Days"
+    }
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/intl-data/products"
+}</pre></div></div></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Purchase international data bundle</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/intl-data/purchase</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>phone</td><td>string</td><td><span class="req-yes">required</span></td><td>Recipient international phone number</td></tr><tr><td>productCode</td><td>string</td><td><span class="req-yes">required</span></td><td>Data bundle code</td></tr><tr><td>operatorId</td><td>string</td><td><span class="req-yes">required</span></td><td>Carrier operator ID</td></tr><tr><td>countryCode</td><td>string</td><td><span class="req-yes">required</span></td><td>2-letter ISO country code</td></tr><tr><td>countryName</td><td>string</td><td><span class="req-yes">required</span></td><td>Country name</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Package amount</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/intl-data/purchase \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "phone": "233201234567",
+    "productCode": "mtn-gh-1gb",
+    "operatorId": "mtn-gh",
+    "countryCode": "GH",
+    "countryName": "Ghana",
+    "amount": 15,
+    "partnerReference": "PR-ID-40218"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "International data purchase successful",
+  "data": {
+    "transactionReference": "TXN_1720603200000_0D1E",
+    "partnerReference": "PR-ID-40218",
+    "status": "success",
+    "countryCode": "GH"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/intl-data/purchase"
+}</pre></div></div></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get international data status</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/intl-data/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="pagenav"><a href="crypto.html"><span class="dir">&larr; Previous</span>Crypto Trading</a><span></span></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

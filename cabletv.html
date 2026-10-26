@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cable TV — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link active" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Product &middot; Entertainment</div>
+<h1>Cable TV</h1>
+<p class="lede">Verify customer smartcards, browse bouquets, and renew or upgrade subscriptions across DSTV, GOtv, StarTimes, and Showmax.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/cabletv</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on verify/purchase)</b></div>
+  <div class="receipt-row"><span>Supported Carriers</span><b>DSTV (<code>dstv</code>) &middot; GOtv (<code>gotv</code>) &middot; StarTimes (<code>startimes</code>) &middot; Showmax (<code>showmax</code>)</b></div>
+  <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
+</div>
+
+<h2 id="providers">1. List Cable TV Providers</h2>
+<p>Query the supported pay-TV operators and their slug identifiers:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List cable TV providers</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/cabletv/providers</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/cabletv/providers \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Cable TV providers retrieved",
+  "data": [
+    { "id": "64f1c1a1c4d5e6f7a8b9c201", "name": "DSTV", "code": "dstv" },
+    { "id": "64f1c1a1c4d5e6f7a8b9c202", "name": "GOtv", "code": "gotv" },
+    { "id": "64f1c1a1c4d5e6f7a8b9c203", "name": "StarTimes", "code": "startimes" },
+    { "id": "64f1c1a1c4d5e6f7a8b9c204", "name": "Showmax", "code": "showmax" }
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/cabletv/providers"
+}</pre></div></div></div>
+
+<h2 id="packages">2. List Bouquets / Packages</h2>
+<p>Retrieve all packages available for a given provider slug or provider ID:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List bouquets for provider</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/cabletv/packages/:providerId</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/cabletv/packages/dstv \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Cable TV packages retrieved",
+  "data": [
+    {
+      "id": "64f3c2a1c4d5e6f7a8b9c211",
+      "code": "dstv-padi",
+      "name": "DStv Padi",
+      "amount": 4400,
+      "validity": "1 Month"
+    },
+    {
+      "id": "64f3c2a1c4d5e6f7a8b9c212",
+      "code": "dstv-yanga",
+      "name": "DStv Yanga",
+      "amount": 6000,
+      "validity": "1 Month"
+    },
+    {
+      "id": "64f3c2a1c4d5e6f7a8b9c213",
+      "code": "dstv-compact",
+      "name": "DStv Compact",
+      "amount": 15700,
+      "validity": "1 Month"
+    }
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/cabletv/packages/dstv"
+}</pre></div></div></div>
+
+<h2 id="verify">3. Verify Smartcard Number</h2>
+<p>Always verify a customer's smartcard or IUC number before initiating payment. This resolves the registered customer name and current active bouquet:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Verify smartcard / IUC</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/cabletv/verify</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>smartCardNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>Decoder smartcard or IUC number</td></tr><tr><td>serviceCode</td><td>string</td><td><span class="req-yes">required</span></td><td>Provider slug: <code>dstv</code>, <code>gotv</code>, <code>startimes</code>, or <code>showmax</code></td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/cabletv/verify \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "smartCardNumber": "1234567890",
+    "serviceCode": "dstv"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/cabletv/verify", {
+  smartCardNumber: "1234567890",
+  serviceCode: "dstv"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Smartcard verified successfully",
+  "data": {
+    "smartCardNumber": "1234567890",
+    "customerName": "CHINEDU OKEKE",
+    "currentPlan": "DStv Yanga",
+    "dueDate": "2026-07-28"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/cabletv/verify"
+}</pre></div></div></div>
+
+<h2 id="purchase">4. Renew or Change Subscription</h2>
+<p>Submit a subscription payment for renewal or package upgrade:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Renew or change subscription</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/cabletv/purchase</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>provider</td><td>string</td><td><span class="req-yes">required</span></td><td>Provider slug: <code>dstv</code>, <code>gotv</code>, <code>startimes</code>, or <code>showmax</code></td></tr><tr><td>smartCardNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>Customer smartcard number</td></tr><tr><td>productId</td><td>string</td><td><span class="req-yes">required</span></td><td>Target package <code>code</code> or MongoDB <code>id</code> from packages catalog</td></tr><tr><td>type</td><td>string</td><td><span class="req-yes">required</span></td><td><code>renew</code> (keep current plan) or <code>change</code> (upgrade/downgrade bouquet)</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/cabletv/purchase \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "provider": "dstv",
+    "smartCardNumber": "1234567890",
+    "productId": "dstv-compact",
+    "type": "change",
+    "partnerReference": "PR-CTV-40218"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Cable TV subscription initiated",
+  "data": {
+    "transactionReference": "TXN_1720603200000_2B3C",
+    "partnerReference": "PR-CTV-40218",
+    "status": "pending",
+    "smartCardNumber": "1234567890",
+    "package": "DStv Compact",
+    "amount": 15700
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/cabletv/purchase"
+}</pre></div></div></div>
+
+<div class="callout callout-info"><p>Upon carrier activation, Billpadi fires a <code>cabletv.purchase.success</code> webhook.</p></div>
+
+<h2 id="transactions">5. Transaction Status &amp; Listing</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get cable TV transaction status</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/cabletv/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List cable TV transactions</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/cabletv/transactions</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="pagenav"><a href="electricity.html"><span class="dir">&larr; Previous</span>Electricity</a><a class="to-right" href="betting.html"><span class="dir">Next &rarr;</span>Betting Wallet Funding</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

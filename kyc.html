@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identity Verification (KYC) — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link active" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Wallet &amp; Identity</div>
+<h1>Identity Verification (KYC)</h1>
+<p class="lede">Verify end-user identities in real time against Nigerian identity databases (NIN and BVN) to satisfy compliance, AML, and onboarding requirements.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base Path</span><b>/api/v1/partner/kyc</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on verify)</b></div>
+  <div class="receipt-row"><span>Supported ID Types</span><b><code>bvn</code> &middot; <code>nin</code></b></div>
+  <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
+</div>
+
+<h2 id="verify-identity">Verify Customer Identity</h2>
+<p>Perform an identity verification query by passing the customer's BVN or NIN along with their legal name and date of birth:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Verify customer BVN or NIN</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/kyc/verify</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>identificationType</td><td>string</td><td><span class="req-yes">required</span></td><td><code>bvn</code> or <code>nin</code> (case-insensitive)</td></tr><tr><td>value</td><td>string</td><td><span class="req-yes">required</span></td><td>11-digit BVN or NIN number</td></tr><tr><td>firstname</td><td>string</td><td><span class="req-yes">required</span></td><td>Claimed first name</td></tr><tr><td>lastname</td><td>string</td><td><span class="req-yes">required</span></td><td>Claimed last name</td></tr><tr><td>middlename</td><td>string</td><td><span class="req-no">optional</span></td><td>Claimed middle name (if available)</td></tr><tr><td>dateOfBirth</td><td>string</td><td><span class="req-yes">required</span></td><td>Format: <code>YYYY-MM-DD</code></td></tr><tr><td>phoneNumber</td><td>string</td><td><span class="req-no">optional</span></td><td>Customer phone number for cross-matching</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-no">optional</span></td><td>Unique reference for tracking the verification event</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/kyc/verify \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "identificationType": "bvn",
+    "value": "22198765432",
+    "firstname": "Chinedu",
+    "lastname": "Okeke",
+    "dateOfBirth": "1994-08-22",
+    "phoneNumber": "+2348031234567",
+    "partnerReference": "KYC-USER-10294"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/kyc/verify", {
+  identificationType: "bvn",
+  value: "22198765432",
+  firstname: "Chinedu",
+  lastname: "Okeke",
+  dateOfBirth: "1994-08-22",
+  partnerReference: "KYC-USER-10294"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Identity verified successfully",
+  "data": {
+    "verified": true,
+    "confidence": 100,
+    "reference": "KYC_1720603200000_1A2B",
+    "partnerReference": "KYC-USER-10294",
+    "matchDetails": {
+      "firstname": true,
+      "lastname": true,
+      "dateOfBirth": true
+    },
+    "fee": 150
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/kyc/verify"
+}</pre></div></div></div>
+
+<h2 id="status-lookup">Lookup Verification Transaction</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get KYC verification status by reference</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/kyc/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API Key only</span></div>
+</div>
+
+<h2 id="list-transactions">List KYC Verification Transactions</h2>
+<p>Retrieve paginated verification records with optional status filtering:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List verification audit logs</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/kyc/transactions</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API Key only</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td>page</td><td>integer</td><td><code>1</code></td><td>Page number</td></tr><tr><td>limit</td><td>integer</td><td><code>20</code></td><td>Results per page</td></tr><tr><td>status</td><td>string</td><td>&mdash;</td><td>Filter by status: <code>success</code> or <code>failed</code></td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://api.billpadi.com/api/v1/partner/kyc/transactions?page=1&limit=20" \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Transactions retrieved",
+  "data": [
+    {
+      "reference": "KYC_1720603200000_1A2B",
+      "partnerReference": "KYC-USER-10294",
+      "identificationType": "bvn",
+      "status": "success",
+      "verified": true,
+      "fee": 150,
+      "createdAt": "2026-07-10T09:20:03.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 48,
+    "page": 1,
+    "limit": 20,
+    "totalPages": 3,
+    "hasNext": true,
+    "hasPrev": false
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/kyc/transactions"
+}</pre></div></div></div>
+
+<div class="pagenav"><a href="withdraw.html"><span class="dir">&larr; Previous</span>Withdrawals &amp; Payouts</a><a class="to-right" href="airtime.html"><span class="dir">Next &rarr;</span>Airtime</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

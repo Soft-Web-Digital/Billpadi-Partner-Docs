@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account &amp; Dashboard — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link active" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Guide</div>
+<h1>Account &amp; dashboard</h1>
+<p class="lede">Manage your partner business credentials, retrieve your webhook secret, rotate API keys, inspect main wallet balance, and review webhook delivery logs.</p>
+
+<div class="callout callout-info"><p>These account-management endpoints are authenticated with your <strong>Dashboard Login JWT Token</strong> (obtained from <code>POST /api/v1/auth/login</code>) using the standard <code>Authorization: Bearer &lt;token&gt;</code> header.</p></div>
+
+<h2 id="profile">Partner profile &amp; webhook secret</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get partner profile</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/profile</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<p>Returns your partner registration status, representative details, configured webhook URL, and your active <code>webhookSecret</code>:</p>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/profile \
+  -H "Authorization: Bearer &lt;your-login-token&gt;"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Profile retrieved successfully",
+  "data": {
+    "id": "665f1c2a9e1b2c0012a4e9f1",
+    "firstname": "Ada",
+    "lastname": "Obi",
+    "email": "ada@merchro.com",
+    "phone": "+2348012345678",
+    "partner": {
+      "companyName": "Merchro Ltd",
+      "contactPerson": "Ada Obi",
+      "status": "active",
+      "webhookUrl": "https://api.yourdomain.com/webhooks/billpadi",
+      "webhookSecret": "a8f3b4c1d2e9876543210fedcba9876543210fedcba9876543210fedcba98765",
+      "allowedIps": ["102.89.44.12", "197.210.55.0/24"],
+      "createdAt": "2026-06-02T11:04:00.000Z"
+    }
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/profile"
+}</pre></div></div></div>
+
+<h2 id="ip-whitelist">IP whitelist management</h2>
+
+<p>Billpadi enforces network-level IP whitelisting for your API keys. When configured, any request sent from an IP address not in your whitelist is immediately rejected with <code>403 Forbidden</code>.</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Update authorized IP addresses</p>
+  <div class="endpoint-row">
+    <span class="method method-patch">PUT</span>
+    <span class="path">/partner/ip-whitelist</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<p>Send an array of exact IPv4/IPv6 addresses or CIDR blocks. Set to <code>[]</code> (empty array) to disable IP restrictions during sandbox testing:</p>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X PUT https://api.billpadi.com/api/v1/partner/ip-whitelist \
+  -H "Authorization: Bearer &lt;your-login-token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "allowedIps": [
+      "102.89.44.12",
+      "197.210.55.0/24"
+    ]
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await fetch("https://api.billpadi.com/api/v1/partner/ip-whitelist", {
+  method: "PUT",
+  headers: {
+    "Authorization": "Bearer <your-login-token>",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    allowedIps: ["102.89.44.12", "197.210.55.0/24"]
+  })
+});
+const data = await res.json();</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "IP whitelist updated successfully",
+  "data": {
+    "allowedIps": [
+      "102.89.44.12",
+      "197.210.55.0/24"
+    ],
+    "count": 2
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/ip-whitelist"
+}</pre></div></div></div>
+
+<h2 id="api-key-management">API key management</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Generate or rotate API key</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/api-keys</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<p>Returns a newly generated <code>apiKey</code> and <code>apiSecret</code> pair. Store the secret immediately in your environment secrets manager; it is encrypted at rest and cannot be recovered if lost.</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List active API keys</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/api-keys</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<p>Returns your active key metadata (ID, masked prefix, status, and creation date).</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Deactivate an API key</p>
+  <div class="endpoint-row">
+    <span class="method method-delete">DELETE</span>
+    <span class="path">/partner/api-keys/:keyId</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<h2 id="dashboard-wallet">Dashboard, wallet &amp; audit</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get dashboard analytics</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/dashboard</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get partner wallet balance</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/wallet</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/wallet \
+  -H "Authorization: Bearer &lt;your-login-token&gt;"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Wallet retrieved successfully",
+  "data": {
+    "balance": 8450000.50,
+    "currency": "NGN",
+    "ledgerBalance": 8450000.50
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/wallet"
+}</pre></div></div></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Lookup any transaction by reference</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get webhook dispatch audit history</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/webhooks</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<div class="pagenav"><a href="webhooks.html"><span class="dir">&larr; Previous</span>Webhooks</a><a class="to-right" href="deposit.html"><span class="dir">Next &rarr;</span>Wallet Deposits</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

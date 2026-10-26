@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electricity — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link active" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Product &middot; Utilities</div>
+<h1>Electricity Bill Payment</h1>
+<p class="lede">Pay prepaid and postpaid electricity bills across all Nigerian Electricity Distribution Companies (DISCOs) with instant token generation and webhook callbacks.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/electricity</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on purchase)</b></div>
+  <div class="receipt-row"><span>Supported Meter Types</span><b><code>prepaid</code> &middot; <code>postpaid</code></b></div>
+  <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
+</div>
+
+<h2 id="providers">1. List Electricity Providers (DISCOs)</h2>
+<p>Query the catalog of active electricity distribution companies and their slug codes:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List active DISCO providers</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/electricity/providers</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/electricity/providers \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Providers retrieved",
+  "data": [
+    { "id": "64f1e1a1c4d5e6f7a8b9c101", "name": "Ikeja Electric", "code": "ikeja-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c102", "name": "Eko Electricity (EKEDC)", "code": "eko-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c103", "name": "Abuja Electricity (AEDC)", "code": "abuja-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c104", "name": "Ibadan Electricity (IBEDC)", "code": "ibadan-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c105", "name": "Enugu Electricity (EEDC)", "code": "enugu-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c106", "name": "Port Harcourt Electricity (PHED)", "code": "port-harcourt-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c107", "name": "Jos Electricity (JEDC)", "code": "jos-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c108", "name": "Kaduna Electricity (KAEDCO)", "code": "kaduna-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c109", "name": "Kano Electricity (KEDCO)", "code": "kano-electric" },
+    { "id": "64f1e1a1c4d5e6f7a8b9c110", "name": "Benin Electricity (BEDC)", "code": "benin-electric" }
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/electricity/providers"
+}</pre></div></div></div>
+
+<h2 id="purchase">2. Pay an Electricity Bill</h2>
+<p>Purchase electricity for a prepaid meter or settle a postpaid account. The <code>providerId</code> field accepts either the DISCO slug (e.g. <code>ikeja-electric</code>) or the MongoDB ObjectId:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Pay electricity bill</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/electricity/purchase</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>meterNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>Prepaid or postpaid meter number</td></tr><tr><td>providerId</td><td>string</td><td><span class="req-yes">required</span></td><td>DISCO slug code (e.g. <code>ikeja-electric</code>, <code>eko-electric</code>) or ObjectId</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Payment amount in NGN (min 500)</td></tr><tr><td>meterType</td><td>string</td><td><span class="req-yes">required</span></td><td><code>prepaid</code> or <code>postpaid</code></td></tr><tr><td>phone</td><td>string</td><td><span class="req-yes">required</span></td><td>Customer phone number for SMS token delivery</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/electricity/purchase \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "meterNumber": "04123456789",
+    "providerId": "ikeja-electric",
+    "amount": 5000,
+    "meterType": "prepaid",
+    "phone": "08012345678",
+    "partnerReference": "PR-ELEC-77120"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/electricity/purchase", {
+  meterNumber: "04123456789",
+  providerId: "ikeja-electric",
+  amount: 5000,
+  meterType: "prepaid",
+  phone: "08012345678",
+  partnerReference: "PR-ELEC-77120"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Electricity purchase initiated",
+  "data": {
+    "transactionReference": "TXN_1720603200000_8F9A",
+    "partnerReference": "PR-ELEC-77120",
+    "status": "pending",
+    "meterNumber": "04123456789",
+    "amount": 5000,
+    "token": "4123 9081 2234 5678 9012",
+    "units": "54.2 kWh"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/electricity/purchase"
+}</pre></div></div></div>
+
+<div class="callout callout-info"><p>For prepaid meters where the DISCO generates the token asynchronously, our background poller queries the carrier and dispatches an <code>electricity.purchase.success</code> webhook containing the <code>token</code> as soon as it is generated &mdash; see <a href="webhooks.html">Webhooks</a>.</p></div>
+
+<h2 id="transactions">3. Transaction Status &amp; Listing</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get electricity transaction status</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/electricity/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List electricity transactions</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/electricity/transactions</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="pagenav"><a href="data.html"><span class="dir">&larr; Previous</span>Mobile Data</a><a class="to-right" href="cabletv.html"><span class="dir">Next &rarr;</span>Cable TV</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

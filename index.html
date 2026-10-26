@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link active" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Partner API &middot; Developer Docs</div>
+<h1>Build fintech and bill-payment features on our rails</h1>
+<p class="lede">The Partner API empowers your platform to automate wallet deposits, bank payouts, crypto trading, identity verification (NIN/BVN), gift cards, airtime, mobile data, electricity tokens, cable TV, betting wallets, education PINs, and international top-ups &mdash; with clean human-readable slugs, a unified HMAC-SHA256 signature scheme, and real-time webhook callbacks.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base URL</span><b>https://partner-api.billpadi.com/api/v1/partner</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key header, HMAC-SHA256 request signing</b></div>
+  <div class="receipt-row"><span>Format</span><b>application/json in, JSON envelope out</b></div>
+  <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s per route group (with failure circuit breaker)</b></div>
+</div>
+
+<div class="callout callout-info"><p>All partner API requests are served under <code>/api/v1/partner</code>. Make sure to include your assigned <code>x-api-key</code> in the header of every request.</p></div>
+
+<h2 id="how-it-fits-together">How it fits together</h2>
+<p>Every service and product group follows a predictable, battle-tested pattern:</p>
+<ul>
+  <li><strong>Catalog / lookup endpoints</strong> (networks, packages, providers, rates, countries) &mdash; read-only operations that require only your <code>x-api-key</code>. Use clean slugs like <code>mtn</code>, <code>dstv</code>, <code>ikeja-electric</code>, or <code>bet9ja</code>.</li>
+  <li><strong>Action endpoints</strong> (purchase, sell, fund, withdraw, verify) &mdash; write operations that move funds or verify identity. These require your <code>x-api-key</code> plus an HMAC-SHA256 signature in the <code>x-signature</code> header.</li>
+  <li><strong>Status &amp; listing endpoints</strong> &mdash; check any transaction status instantly by its reference, or retrieve paginated lists of past activity.</li>
+  <li><strong>Webhook notifications</strong> &mdash; asynchronous completion events (e.g. electricity meter tokens, gift card approvals, bank transfer settlements) are delivered straight to your webhook URL signed with your <code>webhookSecret</code>.</li>
+</ul>
+<p>Every response is wrapped in a consistent JSON envelope, and every write endpoint requires a unique <code>partnerReference</code> so you can reconcile records against your database seamlessly.</p>
+
+<h2 id="products">Wallet &amp; Identity</h2>
+<div class="grid">
+  <a class="product-card" href="deposit.html"><span class="pc-num">01</span><h4>Wallet Deposits</h4><p>Initiate dynamic bank transfer checkout or provision dedicated permanent virtual accounts.</p></a>
+  <a class="product-card" href="withdraw.html"><span class="pc-num">02</span><h4>Withdrawals &amp; Payouts</h4><p>Perform account name lookups, save beneficiary accounts, and execute automated bank transfers.</p></a>
+  <a class="product-card" href="kyc.html"><span class="pc-num">03</span><h4>Identity Verification</h4><p>Verify customer NIN or BVN details with biometric and government identity validation rails.</p></a>
+</div>
+
+<h2 id="services">Products &amp; Value-Added Services</h2>
+<div class="grid">
+  <a class="product-card" href="airtime.html"><span class="pc-num">04</span><h4>Airtime</h4><p>Instant airtime top-ups for MTN, Airtel, Glo, and 9mobile.</p></a>
+  <a class="product-card" href="data.html"><span class="pc-num">05</span><h4>Mobile Data</h4><p>Catalog bundles, SME data, and direct top-up packages.</p></a>
+  <a class="product-card" href="electricity.html"><span class="pc-num">06</span><h4>Electricity</h4><p>Pay prepaid and postpaid DISCO bills with instant meter tokens.</p></a>
+  <a class="product-card" href="cabletv.html"><span class="pc-num">07</span><h4>Cable TV</h4><p>Verify smartcards and renew DSTV, GOtv, and StarTimes subscriptions.</p></a>
+  <a class="product-card" href="betting.html"><span class="pc-num">08</span><h4>Betting Funding</h4><p>Verify customer bet accounts and fund wallets across top bookmakers.</p></a>
+  <a class="product-card" href="education.html"><span class="pc-num">09</span><h4>Education PINs</h4><p>Purchase WAEC and JAMB candidate examination and result checker PINs.</p></a>
+  <a class="product-card" href="giftcards.html"><span class="pc-num">10</span><h4>Gift Cards</h4><p>Purchase digital gift cards or submit cards for sale with automated settlement.</p></a>
+  <a class="product-card" href="crypto.html"><span class="pc-num">11</span><h4>Crypto Trading</h4><p>Execute buy and sell orders for BTC, ETH, USDT, and USDC with real-time rates.</p></a>
+  <a class="product-card" href="international.html"><span class="pc-num">12</span><h4>International Top-Up</h4><p>Send mobile airtime and data bundles to hundreds of global destinations.</p></a>
+</div>
+
+<h2 id="request-lifecycle">A typical integration</h2>
+<ol>
+  <li>Register at <code>POST /partner/auth/register</code> and wait for partner account approval &mdash; see <a href="getting-started.html">Getting Started</a>.</li>
+  <li>Log in to your partner portal or use your session token to generate an API key and retrieve your secret via <code>POST /partner/api-keys</code>.</li>
+  <li>Sign every write request with your secret &mdash; see <a href="authentication.html">Authentication &amp; Signing</a>.</li>
+  <li>Configure your webhook endpoint via <code>PATCH /partner/webhook</code> to receive real-time notifications for completed transactions &mdash; see <a href="webhooks.html">Webhooks</a>.</li>
+  <li>Handle responses, pagination envelopes, and rate limits gracefully &mdash; see <a href="errors.html">Errors &amp; Status Codes</a> and <a href="rate-limits.html">Rate Limits</a>.</li>
+</ol>
+
+<div class="callout callout-warn"><p>Production API keys are prefixed with <code>sk_live_&hellip;</code> and move real funds. We recommend testing your signature calculation and webhook handling with low denomination transactions first.</p></div>
+<div class="pagenav"><span></span><a class="to-right" href="getting-started.html"><span class="dir">Next &rarr;</span>Getting Started</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

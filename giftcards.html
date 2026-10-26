@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gift Cards — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link active" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Product &middot; Digital Cards</div>
+<h1>Gift Cards</h1>
+<p class="lede">Purchase digital gift cards for top international brands, or accept gift cards from your users for redemption with automated payout and webhook trade updates.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/giftcards</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on purchase/sell)</b></div>
+  <div class="receipt-row"><span>Max amount</span><b>&#8358;1,000,000 per transaction</b></div>
+  <div class="receipt-row"><span>Webhooks</span><b><code>giftcard.sale.approved</code> &middot; <code>giftcard.sale.declined</code></b></div>
+</div>
+
+<h2 id="products">1. List Gift Card Products</h2>
+<p>Query the catalog of digital cards with support for pagination and type filtering:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List available gift cards</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/giftcards/products</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Query Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td>type</td><td>string</td><td><code>buy</code></td><td>Filter by trade direction: <code>buy</code> or <code>sell</code></td></tr><tr><td>category</td><td>string</td><td>&mdash;</td><td>Filter by category ID</td></tr><tr><td>page</td><td>integer</td><td><code>1</code></td><td>Page number</td></tr><tr><td>limit</td><td>integer</td><td><code>20</code></td><td>Results per page</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://api.billpadi.com/api/v1/partner/giftcards/products?type=buy&page=1&limit=20" \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Gift cards retrieved successfully",
+  "data": [
+    {
+      "id": "64f1a2b3c4d5e6f7a8b9c0d1",
+      "name": "Apple / iTunes Gift Card",
+      "country": "US",
+      "currency": "USD",
+      "denominations": [10, 25, 50, 100],
+      "buyRate": 1450,
+      "sellRate": 1280
+    }
+  ],
+  "pagination": {
+    "total": 35,
+    "page": 1,
+    "limit": 20,
+    "totalPages": 2,
+    "hasNext": true,
+    "hasPrev": false
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/giftcards/products"
+}</pre></div></div></div>
+
+<h2 id="purchase">2. Purchase a Gift Card</h2>
+<p>Purchase digital codes instantly using your main partner wallet balance:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Purchase digital gift card</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/giftcards/purchase</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>giftCardId</td><td>string (ObjectId)</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal ID from products catalog</td></tr><tr><td>productId</td><td>string (ObjectId)</td><td><span class="req-no">optional</span></td><td>Optional variant ID (if card has specific denominations)</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Card face value in foreign currency (e.g. <code>50</code> USD)</td></tr><tr><td>quantity</td><td>integer</td><td><span class="req-yes">required</span></td><td>Number of cards (1 to 10)</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/giftcards/purchase \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "giftCardId": "64f1a2b3c4d5e6f7a8b9c0d1",
+    "amount": 50,
+    "quantity": 1,
+    "partnerReference": "PR-GC-10293"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/giftcards/purchase", {
+  giftCardId: "64f1a2b3c4d5e6f7a8b9c0d1",
+  amount: 50,
+  quantity: 1,
+  partnerReference: "PR-GC-10293"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 201 Created</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Giftcard purchased successfully",
+  "data": {
+    "transactionReference": "TXN_1720603200000_3A91",
+    "partnerReference": "PR-GC-10293",
+    "status": "success",
+    "amount": 50,
+    "quantity": 1,
+    "codes": [
+      { "code": "X92K-LL92-MM10-PP41", "pin": "9921" }
+    ]
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/giftcards/purchase"
+}</pre></div></div></div>
+
+<h2 id="sell">3. Sell a Gift Card</h2>
+<p>Submit customer gift card redemption details and images for automated processing and review:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Submit gift card for sale</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/giftcards/sell</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>giftCardId</td><td>string (ObjectId)</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal ID</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Face value of the card</td></tr><tr><td>quantity</td><td>integer</td><td><span class="req-yes">required</span></td><td>Number of cards (1 to 10)</td></tr><tr><td>cards</td><td>array&lt;string&gt;</td><td><span class="req-yes">required</span></td><td>1 to 10 URLs pointing to card front/back images or receipts</td></tr><tr><td>comment</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional redemption note (e.g. e-code details)</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/giftcards/sell \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "giftCardId": "64f1a2b3c4d5e6f7a8b9c0d1",
+    "amount": 100,
+    "quantity": 1,
+    "cards": ["https://cdn.yourdomain.com/uploads/card-front.jpg"],
+    "comment": "Physical card with purchase receipt",
+    "partnerReference": "PR-GCS-88213"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 201 Created</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Giftcard sold successfully",
+  "data": {
+    "transactionReference": "TXN_1720603200000_7C12",
+    "partnerReference": "PR-GCS-88213",
+    "status": "pending_manual"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/giftcards/sell"
+}</pre></div></div></div>
+
+<div class="callout callout-info"><p>When the card is reviewed, Billpadi fires a <code>giftcard.sale.approved</code> webhook (and credits your wallet) or a <code>giftcard.sale.declined</code> webhook with the decline reason &mdash; see <a href="webhooks.html">Webhooks</a>.</p></div>
+
+<h2 id="transactions">4. Transaction Status &amp; Listing</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get gift card transaction status</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/giftcards/transactions/:transactionRef</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List gift card transactions</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/giftcards/transactions</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="pagenav"><a href="education.html"><span class="dir">&larr; Previous</span>Education (WAEC / JAMB)</a><a class="to-right" href="crypto.html"><span class="dir">Next &rarr;</span>Crypto Trading</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

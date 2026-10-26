@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wallet Deposits — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link active" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Wallet &amp; Identity</div>
+<h1>Wallet Deposits</h1>
+<p class="lede">Fund your partner balance via on-demand bank checkout or provision a dedicated permanent virtual bank account under your company name for automated funding.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base Path</span><b>/api/v1/partner/deposit</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on write actions)</b></div>
+  <div class="receipt-row"><span>Funding Methods</span><b>Dynamic Bank Transfer Checkout &middot; Dedicated Permanent Virtual Account</b></div>
+  <div class="receipt-row"><span>Webhook Event</span><b><code>deposit.success</code></b></div>
+</div>
+
+<h2 id="method-1-checkout">Method 1 &mdash; Dynamic Bank Transfer Checkout</h2>
+<p>Initiate an on-demand deposit. Returns payment transfer details or an instant checkout session:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Initialize deposit checkout</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/deposit/fund</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Deposit amount in NGN (positive number)</td></tr><tr><td>method</td><td>string</td><td><span class="req-no">optional</span></td><td><code>bank_transfer</code> (default) or <code>card</code></td></tr><tr><td>provider</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional override (e.g. <code>saveHaven</code>, <code>monnify</code>, <code>flutterwave</code>). Omit to use the active default provider.</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/deposit/fund \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "amount": 250000,
+    "method": "bank_transfer"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/deposit/fund", {
+  amount: 250000,
+  method: "bank_transfer"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Deposit payment initialized successfully",
+  "data": {
+    "reference": "DEP_1720603200000_33B1",
+    "amount": 250000,
+    "paymentDetails": {
+      "accountNumber": "9901827461",
+      "bankName": "Wema Bank",
+      "accountName": "Billpadi / Merchro Ltd",
+      "expiresAt": "2026-07-10T10:20:03.000Z"
+    }
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/deposit/fund"
+}</pre></div></div></div>
+
+<h2 id="method-2-permanent">Method 2 &mdash; Dedicated Permanent Virtual Account</h2>
+<p>For high-frequency funding, provision a persistent, dedicated Nigerian bank account number assigned specifically to your partner account. Any transfer to this account instantly credits your main partner balance 24/7/365.</p>
+
+<h3 id="step-1-initiate">Step 2.1: Initiate Identity Verification</h3>
+<p>Submit your BVN or NIN along with matching legal identity details:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Initiate permanent virtual account KYC</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/deposit/permanent/initiate</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>identificationType</td><td>string</td><td><span class="req-yes">required</span></td><td><code>bvn</code> or <code>nin</code></td></tr><tr><td>value</td><td>string</td><td><span class="req-yes">required</span></td><td>11-digit BVN or NIN number</td></tr><tr><td>firstname</td><td>string</td><td><span class="req-yes">required</span></td><td>Legal first name matching identity records</td></tr><tr><td>lastname</td><td>string</td><td><span class="req-yes">required</span></td><td>Legal last name matching identity records</td></tr><tr><td>middlename</td><td>string</td><td><span class="req-no">optional</span></td><td>Middle name (if registered)</td></tr><tr><td>dateOfBirth</td><td>string</td><td><span class="req-no">optional</span></td><td>Format: <code>YYYY-MM-DD</code></td></tr><tr><td>phoneNumber</td><td>string</td><td><span class="req-no">optional</span></td><td>Registered phone number on BVN/NIN</td></tr><tr><td>address</td><td>string</td><td><span class="req-no">optional</span></td><td>Registered business or personal address</td></tr><tr><td>state</td><td>string</td><td><span class="req-no">optional</span></td><td>State / province</td></tr><tr><td>city</td><td>string</td><td><span class="req-no">optional</span></td><td>City</td></tr><tr><td>postalCode</td><td>string</td><td><span class="req-no">optional</span></td><td>Postal code</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/deposit/permanent/initiate \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "identificationType": "bvn",
+    "value": "22123456789",
+    "firstname": "Ada",
+    "lastname": "Obi",
+    "dateOfBirth": "1992-05-14",
+    "phoneNumber": "+2348012345678"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Identity validation initiated",
+  "data": {
+    "isOtpRequired": true,
+    "identityId": "ident_9f3a8b2c1e4d0f7a",
+    "step": "otp_verification",
+    "expiresIn": 3600,
+    "nextStep": "Verify the OTP sent to your phone to continue"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/deposit/permanent/initiate"
+}</pre></div></div></div>
+
+<h3 id="step-2-verify">Step 2.2: Verify OTP &amp; Provision Virtual Account</h3>
+<p>Submit the one-time passcode delivered by the bank/identity authority to complete account provisioning:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Verify OTP and create permanent account</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/deposit/permanent/verify</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>identityId</td><td>string</td><td><span class="req-yes">required</span></td><td>The <code>identityId</code> returned from Step 2.1</td></tr><tr><td>otp</td><td>string</td><td><span class="req-yes">required</span></td><td>OTP code delivered to the registered phone number</td></tr><tr><td>identificationType</td><td>string</td><td><span class="req-no">optional</span></td><td><code>bvn</code> or <code>nin</code> (defaults to <code>bvn</code>)</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/deposit/permanent/verify \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "identityId": "ident_9f3a8b2c1e4d0f7a",
+    "otp": "481920",
+    "identificationType": "bvn"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Identity verified and permanent virtual account created successfully",
+  "data": {
+    "verified": true,
+    "account": {
+      "accountNumber": "7012345678",
+      "bankName": "SafeHaven Microfinance Bank",
+      "accountName": "BILLPADI / MERCHRO LTD",
+      "status": "active",
+      "type": "permanent",
+      "currency": "NGN"
+    }
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/deposit/permanent/verify"
+}</pre></div></div></div>
+
+<h2 id="list-accounts">Inspect Active Deposit Accounts</h2>
+<p>Retrieve details of your currently assigned virtual deposit account at any time:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get permanent deposit account</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/deposit/accounts</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API Key only</span></div>
+</div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/deposit/accounts \
+  -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Deposit account retrieved successfully",
+  "data": {
+    "hasAccount": true,
+    "account": {
+      "accountNumber": "7012345678",
+      "bankName": "SafeHaven Microfinance Bank",
+      "accountName": "BILLPADI / MERCHRO LTD",
+      "status": "active"
+    }
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/deposit/accounts"
+}</pre></div></div></div>
+
+<div class="pagenav"><a href="account.html"><span class="dir">&larr; Previous</span>Account &amp; Dashboard</a><a class="to-right" href="withdraw.html"><span class="dir">Next &rarr;</span>Withdrawals &amp; Payouts</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

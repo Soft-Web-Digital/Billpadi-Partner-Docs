@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Withdrawals &amp; Payouts — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link active" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Wallet &amp; Identity</div>
+<h1>Withdrawals &amp; Bank Payouts</h1>
+<p class="lede">Disburse funds from your partner wallet directly to any commercial bank or licensed fintech in Nigeria via real-time NIBSS Instant Payments (NIP).</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base Path</span><b>/api/v1/partner/withdraw &middot; /api/v1/partner/bank-transfer</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on write actions)</b></div>
+  <div class="receipt-row"><span>Payout Types</span><b>Saved Beneficiary Withdrawal &middot; Direct Account Transfer</b></div>
+  <div class="receipt-row"><span>Webhook Events</span><b><code>withdrawal.success</code> &middot; <code>withdrawal.failed</code></b></div>
+</div>
+
+<h2 id="verify-account">Step 1 &mdash; Verify Bank Account (Name Enquiry)</h2>
+<p>Perform an instant real-time NIP name enquiry before saving an account or initiating a payout to confirm account owner validity:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Verify bank account details</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/withdraw/accounts/verify</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>accountNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>10-digit NUBAN bank account number</td></tr><tr><td>bankCode</td><td>string</td><td><span class="req-yes">required</span></td><td>Standard 3-6 digit CBN bank code (e.g. <code>058</code> for GTBank, <code>044</code> for Access, <code>011</code> for First Bank)</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/withdraw/accounts/verify \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "accountNumber": "0123456789",
+    "bankCode": "058"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/withdraw/accounts/verify", {
+  accountNumber: "0123456789",
+  bankCode: "058"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Payout account verified successfully",
+  "data": {
+    "accountName": "ADAOBI MERCHRO ENTERPRISES",
+    "accountNumber": "0123456789",
+    "bankCode": "058",
+    "bankName": "Guaranty Trust Bank"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/withdraw/accounts/verify"
+}</pre></div></div></div>
+
+<h2 id="beneficiaries">Step 2 &mdash; Manage Beneficiary Bank Accounts</h2>
+<p>Save verified bank accounts for seamless recurring payouts without re-entering account details each time.</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Save payout beneficiary account</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/withdraw/accounts</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>accountNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>10-digit NUBAN account number</td></tr><tr><td>bankCode</td><td>string</td><td><span class="req-yes">required</span></td><td>CBN bank code</td></tr><tr><td>accountName</td><td>string</td><td><span class="req-no">optional</span></td><td>Account name (auto-resolved if omitted)</td></tr><tr><td>bankName</td><td>string</td><td><span class="req-no">optional</span></td><td>Bank name</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/withdraw/accounts \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "accountNumber": "0123456789",
+    "bankCode": "058",
+    "accountName": "ADAOBI MERCHRO ENTERPRISES",
+    "bankName": "Guaranty Trust Bank"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 201 Created</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Payout account added successfully",
+  "data": {
+    "id": "665f29c19e1b2c0012a4eb10",
+    "accountNumber": "0123456789",
+    "accountName": "ADAOBI MERCHRO ENTERPRISES",
+    "bankCode": "058",
+    "bankName": "Guaranty Trust Bank"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/withdraw/accounts"
+}</pre></div></div></div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List saved payout accounts</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/withdraw/accounts</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API Key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">Delete a saved payout account</p>
+  <div class="endpoint-row">
+    <span class="method method-delete">DELETE</span>
+    <span class="path">/partner/withdraw/accounts/:id</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<h2 id="execute-withdraw">Executing Payouts</h2>
+
+<h3 id="option-a-beneficiary">Option A &mdash; Withdraw to Saved Beneficiary</h3>
+<p>Disburse funds using a saved beneficiary's <code>bankAccountId</code>:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Withdraw funds to beneficiary</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/withdraw</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Amount to withdraw in NGN</td></tr><tr><td>bankAccountId</td><td>string</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal MongoDB ID of saved bank account</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference (2&ndash;100 chars) for idempotency</td></tr><tr><td>provider</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional routing provider override</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/withdraw \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "amount": 50000,
+    "bankAccountId": "665f29c19e1b2c0012a4eb10",
+    "partnerReference": "PAYOUT-REF-8849"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Withdrawal initiated successfully",
+  "data": {
+    "reference": "WTH_1720603200000_77A1",
+    "partnerReference": "PAYOUT-REF-8849",
+    "amount": 50000,
+    "fee": 50,
+    "status": "pending",
+    "accountName": "ADAOBI MERCHRO ENTERPRISES",
+    "accountNumber": "0123456789",
+    "bankName": "Guaranty Trust Bank"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/withdraw"
+}</pre></div></div></div>
+
+<h3 id="option-b-direct">Option B &mdash; Direct Bank Transfer</h3>
+<p>Execute an instant bank transfer on the fly without saving the beneficiary beforehand:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Execute direct bank transfer</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/bank-transfer</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Transfer amount in NGN</td></tr><tr><td>accountNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>10-digit NUBAN account number</td></tr><tr><td>accountName</td><td>string</td><td><span class="req-yes">required</span></td><td>Account name (from name enquiry)</td></tr><tr><td>bankCode</td><td>string</td><td><span class="req-yes">required</span></td><td>CBN bank code</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference for idempotency</td></tr><tr><td>provider</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional routing provider override</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/bank-transfer \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "amount": 100000,
+    "accountNumber": "0123456789",
+    "accountName": "ADAOBI MERCHRO ENTERPRISES",
+    "bankCode": "058",
+    "partnerReference": "TRF-DIRECT-9901"
+  }'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Bank transfer initiated successfully",
+  "data": {
+    "reference": "TRF_1720603200000_99X2",
+    "partnerReference": "TRF-DIRECT-9901",
+    "amount": 100000,
+    "fee": 50,
+    "status": "pending"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/bank-transfer"
+}</pre></div></div></div>
+
+<div class="callout callout-info"><p>When the recipient bank settles the funds, Billpadi fires a <code>withdrawal.success</code> webhook. In the rare event of a reversal or communication failure, a <code>withdrawal.failed</code> webhook is sent and funds are automatically refunded to your wallet.</p></div>
+
+<div class="pagenav"><a href="deposit.html"><span class="dir">&larr; Previous</span>Wallet Deposits</a><a class="to-right" href="kyc.html"><span class="dir">Next &rarr;</span>Identity Verification</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

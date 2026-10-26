@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airtime — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link active" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Product &middot; Telecommunications</div>
+<h1>Airtime</h1>
+<p class="lede">Top up any supported Nigerian mobile network directly to a recipient phone number with instant fulfillment and partner discounts.</p>
+
+<div class="receipt">
+  <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/airtime</b></div>
+  <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on purchase)</b></div>
+  <div class="receipt-row"><span>Supported Networks</span><b>MTN (<code>mtn</code>) &middot; Airtel (<code>airtel</code>) &middot; Glo (<code>glo</code>) &middot; 9mobile (<code>9mobile</code>)</b></div>
+  <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
+</div>
+
+<h2 id="networks">1. List Supported Networks</h2>
+<p>Retrieve the active telecommunication carriers and their corresponding network slugs:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">List active telecom networks</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/airtime/networks</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/airtime/networks \
+  -H "x-api-key: $API_KEY"</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.get("/airtime/networks");</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Networks retrieved",
+  "data": [
+    { "network": "mtn", "name": "MTN" },
+    { "network": "airtel", "name": "Airtel" },
+    { "network": "glo", "name": "Glo" },
+    { "network": "9mobile", "name": "9mobile" }
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/airtime/networks"
+}</pre></div></div></div>
+
+<h2 id="purchase">2. Purchase Airtime</h2>
+<p>Purchase airtime for a customer phone number. The transaction is instantly dispatched to the active telco gateway:</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Purchase mobile airtime</p>
+  <div class="endpoint-row">
+    <span class="method method-post">POST</span>
+    <span class="path">/partner/airtime/purchase</span>
+  </div>
+  <div class="badges"><span class="badge req-sig">Signature required</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>phone</td><td>string</td><td><span class="req-yes">required</span></td><td>Recipient 11-digit Nigerian phone number (e.g. <code>08012345678</code>)</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Amount in NGN (positive number, min 50, max 1,000,000)</td></tr><tr><td>network</td><td>string</td><td><span class="req-yes">required</span></td><td>Network slug: <code>mtn</code>, <code>airtel</code>, <code>glo</code>, or <code>9mobile</code></td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/airtime/purchase \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d '{
+    "phone": "08012345678",
+    "amount": 500,
+    "network": "mtn",
+    "partnerReference": "PR-AT-55210"
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await partnerClient.post("/airtime/purchase", {
+  phone: "08012345678",
+  amount: 500,
+  network: "mtn",
+  partnerReference: "PR-AT-55210"
+});</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Airtime purchase initiated",
+  "data": {
+    "transactionReference": "TXN_1720603200000_1A2B",
+    "partnerReference": "PR-AT-55210",
+    "status": "pending",
+    "phone": "08012345678",
+    "network": "mtn",
+    "amount": 500,
+    "totalCost": 485,
+    "timestamp": 1752136800000
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/airtime/purchase"
+}</pre></div></div></div>
+
+<div class="callout callout-info"><p>When the carrier confirms top-up delivery, Billpadi fires an <code>airtime.purchase.success</code> webhook to your webhook URL &mdash; see <a href="webhooks.html">Webhooks</a>.</p></div>
+
+<h2 id="transactions">3. Transaction Status &amp; Listing</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get airtime transaction status</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/airtime/transactions/:reference</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="endpoint">
+  <p class="endpoint-title">List airtime transactions</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/airtime/transactions</span>
+  </div>
+  <div class="badges"><span class="badge req-key">API key only</span></div>
+</div>
+
+<div class="pagenav"><a href="kyc.html"><span class="dir">&larr; Previous</span>Identity Verification</a><a class="to-right" href="data.html"><span class="dir">Next &rarr;</span>Mobile Data</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

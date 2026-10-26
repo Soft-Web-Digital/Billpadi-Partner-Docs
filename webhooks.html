@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webhooks — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link active" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Guide</div>
+<h1>Webhooks</h1>
+<p class="lede">Webhooks eliminate polling by pushing real-time notifications directly to your HTTPS endpoint whenever transactions complete, bank payouts settle, or asynchronous reviews resolve.</p>
+
+<h2 id="set-url">Configuring your webhook URL</h2>
+<p>You can configure or update your webhook URL using your authenticated partner dashboard token. Both <code>PATCH /partner/webhook</code> and <code>GET /partner/profile</code> return your unique <code>webhookSecret</code>, which you use to verify that incoming webhook payloads originate from Billpadi.</p>
+
+<div class="endpoint">
+  <p class="endpoint-title">Update webhook URL</p>
+  <div class="endpoint-row">
+    <span class="method method-patch">PATCH</span>
+    <span class="path">/partner/webhook</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>webhookUrl</td><td>string (URL)</td><td><span class="req-yes">required</span></td><td>Publicly reachable HTTPS URL (e.g. <code>https://api.yourdomain.com/webhooks/billpadi</code>)</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X PATCH https://api.billpadi.com/api/v1/partner/webhook \
+  -H "Authorization: Bearer &lt;your-login-token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"webhookUrl": "https://api.yourdomain.com/webhooks/billpadi"}'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Webhook URL updated successfully",
+  "data": {
+    "webhookUrl": "https://api.yourdomain.com/webhooks/billpadi",
+    "webhookSecret": "a8f3b4c1d2e9...7f6e5d4c3b2a1"
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/webhook"
+}</pre></div></div></div>
+
+<div class="callout callout-info"><p>Your <code>webhookSecret</code> is also accessible at any time via <code>GET /partner/profile</code> under <code>data.partner.webhookSecret</code>.</p></div>
+
+<h2 id="events">Supported webhook events</h2>
+<p>Webhooks fire immediately upon synchronous transaction success, as well as asynchronously when background polling resolves pending carrier orders (such as electricity token generation) or when manual reviews complete (gift card sales, crypto trades):</p>
+
+<div class="table-wrap"><table><thead><tr><th>Event Name</th><th>Trigger Source</th><th>Delivery Data Included</th></tr></thead><tbody><tr><td><code>deposit.success</code></td><td>Incoming bank transfer / virtual account deposit credited</td><td><code>amount</code>, <code>reference</code>, <code>paymentMethod</code>, <code>channel</code></td></tr><tr><td><code>withdrawal.success</code></td><td>Bank payout successfully settled to beneficiary</td><td><code>amount</code>, <code>bankName</code>, <code>accountNumber</code>, <code>fee</code></td></tr><tr><td><code>withdrawal.failed</code></td><td>Bank payout rejected/reversed by recipient NIP bank</td><td><code>amount</code>, <code>failureReason</code></td></tr><tr><td><code>airtime.purchase.success</code></td><td>Airtime top-up confirmed by carrier network</td><td><code>phone</code>, <code>network</code>, <code>amount</code>, <code>totalCost</code></td></tr><tr><td><code>data.purchase.success</code></td><td>Mobile data bundle top-up confirmed</td><td><code>phone</code>, <code>network</code>, <code>plan</code>, <code>amount</code></td></tr><tr><td><code>electricity.purchase.success</code></td><td>Prepaid / Postpaid electricity payment processed</td><td><code>meterNumber</code>, <code>disco</code>, <strong><code>token</code></strong>, <code>units</code></td></tr><tr><td><code>cabletv.purchase.success</code></td><td>DSTV / GOtv / StarTimes renewal confirmed</td><td><code>smartCardNumber</code>, <code>package</code>, <code>amount</code></td></tr><tr><td><code>betting.fund.success</code></td><td>Betting customer account credit confirmed</td><td><code>customerId</code>, <code>provider</code>, <code>amount</code></td></tr><tr><td><code>education.purchase.success</code></td><td>WAEC / JAMB registration PINs generated</td><td><code>examType</code>, <code>pins</code>, <code>amount</code></td></tr><tr><td><code>international.airtime.success</code></td><td>International airtime delivered across borders</td><td><code>phone</code>, <code>countryCode</code>, <code>operator</code>, <code>amount</code></td></tr><tr><td><code>international.data.success</code></td><td>International data package delivered</td><td><code>phone</code>, <code>countryCode</code>, <code>operator</code>, <code>productCode</code></td></tr><tr><td><code>giftcard.sale.approved</code></td><td>Submitted gift card trade verified &amp; settled</td><td><code>amountPaid</code>, <code>rate</code>, <code>currency</code></td></tr><tr><td><code>giftcard.sale.declined</code></td><td>Submitted gift card trade declined after review</td><td><code>declineReason</code></td></tr><tr><td><code>crypto.purchase.success</code></td><td>Crypto purchase transferred to partner wallet address</td><td><code>cryptoAmount</code>, <code>txHash</code>, <code>network</code></td></tr><tr><td><code>crypto.sale.approved</code></td><td>Crypto deposit verified on-chain and fiat credited</td><td><code>fiatAmount</code>, <code>rate</code>, <code>txHash</code></td></tr><tr><td><code>crypto.sale.declined</code></td><td>Crypto sale trade rejected</td><td><code>declineReason</code></td></tr></tbody></table></div>
+
+<h2 id="verifying">Verifying webhook signatures</h2>
+<p>Every webhook HTTP POST sent by Billpadi includes cryptographic headers to prevent spoofing and tampering. Signatures are computed using HMAC-SHA256 with your <code>webhookSecret</code>:</p>
+
+<div class="table-wrap"><table><thead><tr><th>HTTP Header</th><th>Description</th></tr></thead><tbody><tr><td>X-Webhook-Signature</td><td>Hexadecimal HMAC-SHA256 digest of <code>{timestamp}.{rawBody}</code></td></tr><tr><td>X-Webhook-Timestamp</td><td>Epoch millisecond timestamp of notification dispatch</td></tr></tbody></table></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">Node.js / Express</div><div class="code-tab ">Python / FastAPI</div><div class="code-tab ">PHP</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>const express = require("express");
+const crypto = require("crypto");
+
+const app = express();
+const WEBHOOK_SECRET = process.env.BILLPADI_WEBHOOK_SECRET;
+
+// Use express.raw to preserve exact raw bytes for signature validation
+app.post("/webhooks/billpadi", express.raw({ type: "*/*" }), (req, res) => {
+  const signature = req.headers["x-webhook-signature"];
+  const timestamp = req.headers["x-webhook-timestamp"];
+  const rawBody = req.body.toString("utf8");
+
+  if (!signature || !timestamp) {
+    return res.status(400).send("Missing signature headers");
+  }
+
+  // Prevent replay attacks (5 minute window)
+  if (Math.abs(Date.now() - Number(timestamp)) > 300000) {
+    return res.status(401).send("Timestamp expired");
+  }
+
+  const message = `${timestamp}.${rawBody}`;
+  const expectedSignature = crypto
+    .createHmac("sha256", WEBHOOK_SECRET)
+    .update(message)
+    .digest("hex");
+
+  const isValid = crypto.timingSafeEqual(
+    Buffer.from(signature, "hex"),
+    Buffer.from(expectedSignature, "hex")
+  );
+
+  if (!isValid) {
+    return res.status(401).send("Invalid signature");
+  }
+
+  const eventPayload = JSON.parse(rawBody);
+  console.log("Verified webhook event:", eventPayload.event);
+
+  // Process event asynchronously on your end
+  handleEventAsync(eventPayload);
+
+  // Acknowledge receipt immediately with HTTP 200
+  res.status(200).json({ received: true });
+});</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>import hmac
+import hashlib
+import time
+from fastapi import FastAPI, Request, HTTPException
+
+app = FastAPI()
+WEBHOOK_SECRET = "your_webhook_secret_here"
+
+@app.post("/webhooks/billpadi")
+async def handle_webhook(request: Request):
+    signature = request.headers.get("x-webhook-signature")
+    timestamp = request.headers.get("x-webhook-timestamp")
+    
+    if not signature or not timestamp:
+        raise HTTPException(status_code=400, detail="Missing signature headers")
+
+    if abs(time.time() * 1000 - int(timestamp)) > 300000:
+        raise HTTPException(status_code=401, detail="Timestamp expired")
+
+    raw_body = (await request.body()).decode("utf-8")
+    message = f"{timestamp}.{raw_body}".encode("utf-8")
+    expected = hmac.new(WEBHOOK_SECRET.encode("utf-8"), message, hashlib.sha256).hexdigest()
+
+    if not hmac.compare_digest(signature, expected):
+        raise HTTPException(status_code=401, detail="Invalid signature")
+
+    payload = await request.json()
+    # Process payload...
+    return {"received": True}</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>&lt;?php
+$webhookSecret = getenv("BILLPADI_WEBHOOK_SECRET");
+
+$signature = $_SERVER["HTTP_X_WEBHOOK_SIGNATURE"] ?? "";
+$timestamp = $_SERVER["HTTP_X_WEBHOOK_TIMESTAMP"] ?? "";
+$rawBody = file_get_contents("php://input");
+
+if (!$signature || !$timestamp) {
+    http_response_code(400);
+    exit("Missing signature headers");
+}
+
+if (abs(round(microtime(true) * 1000) - (int)$timestamp) > 300000) {
+    http_response_code(401);
+    exit("Timestamp expired");
+}
+
+$message = "{$timestamp}.{$rawBody}";
+$expected = hash_hmac("sha256", $message, $webhookSecret);
+
+if (!hash_equals($signature, $expected)) {
+    http_response_code(401);
+    exit("Invalid signature");
+}
+
+$payload = json_decode($rawBody, true);
+// Process event...
+http_response_code(200);
+echo json_encode(["received" => true]);
+?&gt;</pre></div></div></div>
+
+<h2 id="sample-payloads">Sample webhook payloads</h2>
+<p>Electricity token delivery payload:</p>
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">electricity.purchase.success</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>{
+  "event": "electricity.purchase.success",
+  "transactionReference": "TXN_1720603200000_E98A",
+  "partnerReference": "BILL-ELEC-4421",
+  "status": "success",
+  "product": "electricity",
+  "amount": 10000,
+  "token": "4123 9081 2234 5678 9012",
+  "timestamp": 1752136800000
+}</pre></div></div></div>
+
+<p>Wallet deposit credited payload:</p>
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">deposit.success</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>{
+  "event": "deposit.success",
+  "transactionReference": "DEP_1720603200000_33B1",
+  "partnerReference": "DEP-USR-990",
+  "status": "success",
+  "amount": 250000,
+  "paymentMethod": "bank_transfer",
+  "timestamp": 1752136800000
+}</pre></div></div></div>
+
+<h2 id="delivery">Delivery retry policy</h2>
+<ul>
+  <li>Your endpoint must return an HTTP status code in the <strong>2xx range</strong> within <strong>10 seconds</strong>.</li>
+  <li>If your endpoint times out or returns any non-2xx status code, Billpadi retries up to <strong>3 times</strong> (at 5 minutes, 15 minutes, and 60 minutes).</li>
+  <li>You can inspect all dispatch attempts, response codes, and payloads in real time via <code>GET /partner/webhooks</code>.</li>
+</ul>
+
+<div class="pagenav"><a href="rate-limits.html"><span class="dir">&larr; Previous</span>Rate Limits</a><a class="to-right" href="account.html"><span class="dir">Next &rarr;</span>Account &amp; Dashboard</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authentication &amp; Signing — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link active" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Guide</div>
+<h1>Authentication &amp; signing</h1>
+<p class="lede">Three layers of enterprise defense: network-level IP whitelisting, an API key for route authorization, and a cryptographic HMAC-SHA256 signature on every financial and state-modifying request.</p>
+
+<h2 id="ip-whitelist">Layer 1 &mdash; IP whitelisting</h2>
+<p>Billpadi enforces network-level origin IP authorization. You can configure your servers' static IPv4, IPv6, or CIDR blocks via <a href="account.html#ip-whitelist"><code>PUT /partner/ip-whitelist</code></a> or your partner portal. When configured, incoming requests originating from any IP outside your whitelist are dropped with <code>403 Forbidden (AUTHORIZATION_ERROR)</code>.</p>
+
+<h2 id="api-key">Layer 2 &mdash; API key authorization</h2>
+<p>Provide your live API key in the <code>x-api-key</code> header of every request:</p>
+<div class="table-wrap"><table><thead><tr><th>Header</th><th>Value</th><th>Applies to</th></tr></thead><tbody><tr><td>x-api-key</td><td><code>sk_live_&hellip;</code> (from <code>POST /partner/api-keys</code>)</td><td>All endpoints under <code>/api/v1/partner/*</code></td></tr></tbody></table></div>
+<p>This header authorizes read endpoints (catalogs, service providers, rate feeds, transaction queries). If missing, invalid, or belonging to an inactive partner account, the API immediately responds with <code>401 Unauthorized</code>.</p>
+
+<h2 id="signing">Layer 3 &mdash; HMAC-SHA256 request signing</h2>
+<p>Any action that creates a transaction, debits your wallet, executes a payout, or validates sensitive identity info requires two additional security headers:</p>
+<div class="table-wrap"><table><thead><tr><th>Header</th><th>Value</th><th>Description</th></tr></thead><tbody><tr><td>x-timestamp</td><td>Unix epoch milliseconds (e.g. <code>1752136800000</code>)</td><td>Prevents replay attacks within a 5-minute tolerance window</td></tr><tr><td>x-signature</td><td>Hex-encoded HMAC-SHA256 digest</td><td>Verifies payload integrity using your <code>apiSecret</code></td></tr></tbody></table></div>
+
+<h3 id="building-the-signature">Computing the signature</h3>
+<ol>
+  <li>Serialize the raw JSON body you are transmitting. For requests without a body (or empty payloads), use an empty string <code>""</code>.</li>
+  <li>Construct the raw message string: <code>{timestamp}.{rawBody}</code> (the timestamp string, followed by a literal period <code>.</code>, followed by the exact raw body string).</li>
+  <li>Generate the HMAC digest using SHA-256 with your <code>apiSecret</code> as the key.</li>
+  <li>Encode the digest as a lowercase hexadecimal string and transmit it as <code>x-signature</code>.</li>
+</ol>
+
+<div class="callout callout-danger"><p>Sign the exact JSON string transmitted across the wire. If your client library re-serializes or re-orders JSON keys after signing, the signature verification will fail.</p></div>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">Node.js</div><div class="code-tab ">Python</div><div class="code-tab ">PHP</div><div class="code-tab ">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>const crypto = require("crypto");
+
+function signRequest(apiSecret, timestamp, rawBody) {
+  const message = `${timestamp}.${rawBody}`;
+  return crypto.createHmac("sha256", apiSecret).update(message).digest("hex");
+}
+
+const apiKey = "sk_live_1f9c2a7e4b6d0f83a5c1e9b7d4f2038a...";
+const apiSecret = "9a3e7c1b5d8f2046e1a9c7b3d5f80261...";
+
+const payload = {
+  phone: "08012345678",
+  amount: 500,
+  network: "mtn",
+  partnerReference: "PR-9182734"
+};
+
+const rawBody = JSON.stringify(payload);
+const timestamp = Date.now().toString();
+const signature = signRequest(apiSecret, timestamp, rawBody);
+
+const res = await fetch("https://api.billpadi.com/api/v1/partner/airtime/purchase", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-api-key": apiKey,
+    "x-timestamp": timestamp,
+    "x-signature": signature
+  },
+  body: rawBody
+});
+const data = await res.json();</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>import hashlib
+import hmac
+import json
+import time
+import requests
+
+api_key = "sk_live_1f9c2a7e4b6d0f83a5c1e9b7d4f2038a..."
+api_secret = "9a3e7c1b5d8f2046e1a9c7b3d5f80261..."
+
+payload = {
+    "phone": "08012345678",
+    "amount": 500,
+    "network": "mtn",
+    "partnerReference": "PR-9182734"
+}
+
+raw_body = json.dumps(payload, separators=(',', ':'))
+timestamp = str(int(time.time() * 1000))
+message = f"{timestamp}.{raw_body}"
+signature = hmac.new(api_secret.encode(), message.encode(), hashlib.sha256).hexdigest()
+
+res = requests.post(
+    "https://api.billpadi.com/api/v1/partner/airtime/purchase",
+    data=raw_body,
+    headers={
+        "Content-Type": "application/json",
+        "x-api-key": api_key,
+        "x-timestamp": timestamp,
+        "x-signature": signature
+    }
+)</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>&lt;?php
+$apiKey = "sk_live_1f9c2a7e4b6d0f83a5c1e9b7d4f2038a...";
+$apiSecret = "9a3e7c1b5d8f2046e1a9c7b3d5f80261...";
+
+$payload = [
+    "phone" => "08012345678",
+    "amount" => 500,
+    "network" => "mtn",
+    "partnerReference" => "PR-9182734"
+];
+
+$rawBody = json_encode($payload);
+$timestamp = (string) round(microtime(true) * 1000);
+$message = "{$timestamp}.{$rawBody}";
+$signature = hash_hmac("sha256", $message, $apiSecret);
+
+$ch = curl_init("https://api.billpadi.com/api/v1/partner/airtime/purchase");
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $rawBody);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Content-Type: application/json",
+    "x-api-key: {$apiKey}",
+    "x-timestamp: {$timestamp}",
+    "x-signature: {$signature}"
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+?&gt;</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>BODY='{"phone":"08012345678","amount":500,"network":"mtn","partnerReference":"PR-9182734"}'
+TIMESTAMP=$(($(date +%s%N)/1000000))
+SIGNATURE=$(printf "%s.%s" "$TIMESTAMP" "$BODY" | openssl dgst -sha256 -hmac "$API_SECRET" | sed "s/^.* //")
+
+curl -X POST https://api.billpadi.com/api/v1/partner/airtime/purchase \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-timestamp: $TIMESTAMP" \
+  -H "x-signature: $SIGNATURE" \
+  -d "$BODY"</pre></div></div></div>
+
+<h3 id="timestamp-window">Timestamp validity window</h3>
+<p>The <code>x-timestamp</code> header must be within <strong>5 minutes (300,000 ms)</strong> of server time. Requests with timestamps outside this range are rejected with <code>401 Request expired</code>. Ensure your server time is continuously synchronized with standard NTP time servers.</p>
+
+<h3 id="idempotency">Idempotency &amp; partner references</h3>
+<p>Every transaction write endpoint requires a unique <code>partnerReference</code> string (2 to 100 characters). This ensures safe retries and prevents double charges if network interruptions occur between your servers and ours.</p>
+
+<div class="pagenav"><a href="getting-started.html"><span class="dir">&larr; Previous</span>Getting Started</a><a class="to-right" href="errors.html"><span class="dir">Next &rarr;</span>Errors &amp; Status Codes</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>

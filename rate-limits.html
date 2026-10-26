@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Limits — Partner API Docs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Partner API</span>
+    <button data-sidebar-toggle>Menu</button>
+  </div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="tape-edge"></div>
+    <div class="brand">
+      <div class="brand-logo-card">
+        <img src="assets/billpadi-logo.png" alt="Billpadi" class="brand-logo">
+      </div>
+      <div class="brand-name">Partner API</div>
+      <div class="brand-sub">docs.billpadi.com &middot; v1</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-title">OVERVIEW</div>
+        <a class="nav-link" href="index.html"><span class="dot"></span>Introduction</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">GUIDES</div>
+        <a class="nav-link" href="getting-started.html"><span class="dot"></span>Getting Started</a>
+        <a class="nav-link" href="authentication.html"><span class="dot"></span>Authentication &amp; Signing</a>
+        <a class="nav-link" href="errors.html"><span class="dot"></span>Errors &amp; Status Codes</a>
+        <a class="nav-link active" href="rate-limits.html"><span class="dot"></span>Rate Limits</a>
+        <a class="nav-link" href="webhooks.html"><span class="dot"></span>Webhooks</a>
+        <a class="nav-link" href="account.html"><span class="dot"></span>Account &amp; Dashboard</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">WALLET &amp; IDENTITY</div>
+        <a class="nav-link" href="deposit.html"><span class="dot"></span>Wallet Deposits</a>
+        <a class="nav-link" href="withdraw.html"><span class="dot"></span>Withdrawals &amp; Payouts</a>
+        <a class="nav-link" href="kyc.html"><span class="dot"></span>Identity Verification</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">PRODUCTS</div>
+        <a class="nav-link" href="airtime.html"><span class="dot"></span>Airtime</a>
+        <a class="nav-link" href="data.html"><span class="dot"></span>Mobile Data</a>
+        <a class="nav-link" href="electricity.html"><span class="dot"></span>Electricity</a>
+        <a class="nav-link" href="cabletv.html"><span class="dot"></span>Cable TV</a>
+        <a class="nav-link" href="betting.html"><span class="dot"></span>Betting Wallet Funding</a>
+        <a class="nav-link" href="education.html"><span class="dot"></span>Education (WAEC / JAMB)</a>
+        <a class="nav-link" href="giftcards.html"><span class="dot"></span>Gift Cards</a>
+        <a class="nav-link" href="crypto.html"><span class="dot"></span>Crypto Trading</a>
+        <a class="nav-link" href="international.html"><span class="dot"></span>International Top-Up</a>
+      </div>
+    </nav>
+    <div class="nav-foot">
+      <div class="nav-foot-line">BASE URL<br>partner-api.billpadi.com/api/v1/partner</div>
+      <div class="nav-foot-line" style="margin-top:10px;">Need a live key?<br>See Getting Started &rarr;</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content ">
+      <article class="article">
+<div class="eyebrow">Guide</div>
+<h1>Rate limits &amp; circuit breakers</h1>
+<p class="lede">Rate limits protect both our downstream carrier partners and your wallet balance using an intelligent failure circuit-breaker mechanism scoped per product group, API key, and IP address.</p>
+
+<h2 id="circuit-breaker">How the failure circuit breaker works</h2>
+<p>Unlike blunt rate limiters that throttle healthy production throughput, the Partner API rate limiter functions as a <strong>failure circuit breaker</strong>:</p>
+<ul>
+  <li><strong>Healthy requests pass freely</strong>: When your requests return <code>success: true</code>, the failure attempt counter is instantly reset to 0.</li>
+  <li><strong>Consecutive failures trip the breaker</strong>: If your system emits <strong>30 failed requests</strong> (e.g. 400 Bad Request, missing parameters, invalid accounts) on a specific route within a 60-second sliding window, the circuit breaker trips.</li>
+  <li><strong>Lockout period</strong>: Once tripped, that route is locked out for 60 seconds for your key and IP, returning <code>429 Too Many Requests</code>.</li>
+  <li><strong>Auth bypass</strong>: Unauthenticated requests (401) and unprocessable entities (422) do not increment the failure circuit breaker.</li>
+</ul>
+
+<h2 id="route-groups">Protected route groups</h2>
+<div class="table-wrap"><table><thead><tr><th>Route Group</th><th>Threshold Window</th><th>Lockout Duration</th></tr></thead><tbody><tr><td><code>/partner/deposit</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/withdraw</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/bank-transfer</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/kyc</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/crypto</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/airtime</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/data</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/electricity</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/cabletv</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/betting</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/education</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/giftcards</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/intl-airtime</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr><tr><td><code>/partner/intl-data</code></td><td>30 failures / 60 seconds</td><td>60 seconds</td></tr></tbody></table></div>
+
+<h2 id="exceeding">Circuit breaker response (429)</h2>
+<p>When locked out, the API returns a <code>429 Too Many Requests</code> error with the remaining seconds in <code>details.retryAfter</code>:</p>
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">429 Response</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>{
+  "success": false,
+  "message": "Too many requests. Try again in 42 seconds",
+  "error": "RATE_LIMIT_EXCEEDED",
+  "details": {
+    "retryAfter": 42
+  },
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/airtime/purchase"
+}</pre></div></div></div>
+
+<h2 id="best-practices">Integration best practices</h2>
+<ul>
+  <li><strong>Validate client inputs locally</strong>: Validate phone number formats, amounts, and required slugs on your backend before calling the API to avoid accumulating failures.</li>
+  <li><strong>Cache catalog responses</strong>: Cache network slugs, DISCO providers, and data bundles in Redis or memory for 1 to 6 hours. They change infrequently.</li>
+  <li><strong>Respect <code>retryAfter</code></strong>: If your system receives a <code>429</code>, parse <code>details.retryAfter</code> and suspend retries for that duration rather than creating a retry storm.</li>
+</ul>
+
+<div class="pagenav"><a href="errors.html"><span class="dir">&larr; Previous</span>Errors &amp; Status Codes</a><a class="to-right" href="webhooks.html"><span class="dir">Next &rarr;</span>Webhooks</a></div></article>
+    </div>
+  </main>
+</div>
+<script src="assets/docs.js"></script>
+</body>
+</html>
