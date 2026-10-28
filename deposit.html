@@ -91,7 +91,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Deposit amount in NGN (positive number)</td></tr><tr><td>method</td><td>string</td><td><span class="req-no">optional</span></td><td><code>bank_transfer</code> (default) or <code>card</code></td></tr><tr><td>provider</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional override (e.g. <code>saveHaven</code>, <code>monnify</code>, <code>flutterwave</code>). Omit to use the active default provider.</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/deposit/fund \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/deposit/fund \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -136,7 +136,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>identificationType</td><td>string</td><td><span class="req-yes">required</span></td><td><code>bvn</code> or <code>nin</code></td></tr><tr><td>value</td><td>string</td><td><span class="req-yes">required</span></td><td>11-digit BVN or NIN number</td></tr><tr><td>firstname</td><td>string</td><td><span class="req-yes">required</span></td><td>Legal first name matching identity records</td></tr><tr><td>lastname</td><td>string</td><td><span class="req-yes">required</span></td><td>Legal last name matching identity records</td></tr><tr><td>middlename</td><td>string</td><td><span class="req-no">optional</span></td><td>Middle name (if registered)</td></tr><tr><td>dateOfBirth</td><td>string</td><td><span class="req-no">optional</span></td><td>Format: <code>YYYY-MM-DD</code></td></tr><tr><td>phoneNumber</td><td>string</td><td><span class="req-no">optional</span></td><td>Registered phone number on BVN/NIN</td></tr><tr><td>address</td><td>string</td><td><span class="req-no">optional</span></td><td>Registered business or personal address</td></tr><tr><td>state</td><td>string</td><td><span class="req-no">optional</span></td><td>State / province</td></tr><tr><td>city</td><td>string</td><td><span class="req-no">optional</span></td><td>City</td></tr><tr><td>postalCode</td><td>string</td><td><span class="req-no">optional</span></td><td>Postal code</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/deposit/permanent/initiate \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/deposit/permanent/initiate \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -176,7 +176,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>identityId</td><td>string</td><td><span class="req-yes">required</span></td><td>The <code>identityId</code> returned from Step 2.1</td></tr><tr><td>otp</td><td>string</td><td><span class="req-yes">required</span></td><td>OTP code delivered to the registered phone number</td></tr><tr><td>identificationType</td><td>string</td><td><span class="req-no">optional</span></td><td><code>bvn</code> or <code>nin</code> (defaults to <code>bvn</code>)</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/deposit/permanent/verify \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/deposit/permanent/verify \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -215,7 +215,7 @@
   <div class="badges"><span class="badge req-key">API Key only</span></div>
 </div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/deposit/accounts \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/deposit/accounts \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Deposit account retrieved successfully",

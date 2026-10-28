@@ -73,9 +73,12 @@
 <div class="receipt">
   <div class="receipt-row"><span>Base Path</span><b>/api/v1/partner/kyc</b></div>
   <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on verify)</b></div>
+  <div class="receipt-row"><span>Required Scope</span><b><code>kyc</code> &middot; <a href="account.html#scopes">Check requirements in Settings &rarr;</a></b></div>
   <div class="receipt-row"><span>Supported ID Types</span><b><code>bvn</code> &middot; <code>nin</code></b></div>
   <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
 </div>
+
+<div class="callout callout-info"><p><strong>Access &amp; Scope Requirement:</strong> Calling customer identity verification APIs requires the <code>kyc</code> scope. Compliance requirements are configured dynamically per partner account &mdash; review your active scopes and missing verification items in the web app under <strong>Settings &rarr; Developer &amp; API</strong> or via <code>GET /partner/scopes</code>.</p></div>
 
 <h2 id="verify-identity">Verify Customer Identity</h2>
 <p>Perform an identity verification query by passing the customer's BVN or NIN along with their legal name and date of birth:</p>
@@ -91,7 +94,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>identificationType</td><td>string</td><td><span class="req-yes">required</span></td><td><code>bvn</code> or <code>nin</code> (case-insensitive)</td></tr><tr><td>value</td><td>string</td><td><span class="req-yes">required</span></td><td>11-digit BVN or NIN number</td></tr><tr><td>firstname</td><td>string</td><td><span class="req-yes">required</span></td><td>Claimed first name</td></tr><tr><td>lastname</td><td>string</td><td><span class="req-yes">required</span></td><td>Claimed last name</td></tr><tr><td>middlename</td><td>string</td><td><span class="req-no">optional</span></td><td>Claimed middle name (if available)</td></tr><tr><td>dateOfBirth</td><td>string</td><td><span class="req-yes">required</span></td><td>Format: <code>YYYY-MM-DD</code></td></tr><tr><td>phoneNumber</td><td>string</td><td><span class="req-no">optional</span></td><td>Customer phone number for cross-matching</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-no">optional</span></td><td>Unique reference for tracking the verification event</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/kyc/verify \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/kyc/verify \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -155,7 +158,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td>page</td><td>integer</td><td><code>1</code></td><td>Page number</td></tr><tr><td>limit</td><td>integer</td><td><code>20</code></td><td>Results per page</td></tr><tr><td>status</td><td>string</td><td>&mdash;</td><td>Filter by status: <code>success</code> or <code>failed</code></td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://api.billpadi.com/api/v1/partner/kyc/transactions?page=1&limit=20" \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://partner-api.billpadi.com/api/v1/partner/kyc/transactions?page=1&limit=20" \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Transactions retrieved",

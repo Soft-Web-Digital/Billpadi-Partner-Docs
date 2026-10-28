@@ -73,6 +73,7 @@
 <div class="receipt">
   <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/cabletv</b></div>
   <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on verify/purchase)</b></div>
+  <div class="receipt-row"><span>Required Scope</span><b><code>cabletv</code> &middot; <a href="account.html#scopes">Check requirements in Settings &rarr;</a></b></div>
   <div class="receipt-row"><span>Supported Carriers</span><b>DSTV (<code>dstv</code>) &middot; GOtv (<code>gotv</code>) &middot; StarTimes (<code>startimes</code>) &middot; Showmax (<code>showmax</code>)</b></div>
   <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
 </div>
@@ -89,7 +90,7 @@
   <div class="badges"><span class="badge req-key">API key only</span></div>
 </div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/cabletv/providers \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/cabletv/providers \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Cable TV providers retrieved",
@@ -115,7 +116,7 @@
   <div class="badges"><span class="badge req-key">API key only</span></div>
 </div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/cabletv/packages/dstv \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/cabletv/packages/dstv \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Cable TV packages retrieved",
@@ -160,7 +161,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>smartCardNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>Decoder smartcard or IUC number</td></tr><tr><td>serviceCode</td><td>string</td><td><span class="req-yes">required</span></td><td>Provider slug: <code>dstv</code>, <code>gotv</code>, <code>startimes</code>, or <code>showmax</code></td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/cabletv/verify \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/cabletv/verify \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -198,7 +199,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>provider</td><td>string</td><td><span class="req-yes">required</span></td><td>Provider slug: <code>dstv</code>, <code>gotv</code>, <code>startimes</code>, or <code>showmax</code></td></tr><tr><td>smartCardNumber</td><td>string</td><td><span class="req-yes">required</span></td><td>Customer smartcard number</td></tr><tr><td>productId</td><td>string</td><td><span class="req-yes">required</span></td><td>Target package <code>code</code> or MongoDB <code>id</code> from packages catalog</td></tr><tr><td>type</td><td>string</td><td><span class="req-yes">required</span></td><td><code>renew</code> (keep current plan) or <code>change</code> (upgrade/downgrade bouquet)</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/cabletv/purchase \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/cabletv/purchase \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \

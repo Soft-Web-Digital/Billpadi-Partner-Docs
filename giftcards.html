@@ -73,6 +73,7 @@
 <div class="receipt">
   <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/giftcards</b></div>
   <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on purchase/sell)</b></div>
+  <div class="receipt-row"><span>Required Scope</span><b><code>giftcards</code> &middot; <a href="account.html#scopes">Check requirements in Settings &rarr;</a></b></div>
   <div class="receipt-row"><span>Max amount</span><b>&#8358;1,000,000 per transaction</b></div>
   <div class="receipt-row"><span>Webhooks</span><b><code>giftcard.sale.approved</code> &middot; <code>giftcard.sale.declined</code></b></div>
 </div>
@@ -91,7 +92,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Query Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td>type</td><td>string</td><td><code>buy</code></td><td>Filter by trade direction: <code>buy</code> or <code>sell</code></td></tr><tr><td>category</td><td>string</td><td>&mdash;</td><td>Filter by category ID</td></tr><tr><td>page</td><td>integer</td><td><code>1</code></td><td>Page number</td></tr><tr><td>limit</td><td>integer</td><td><code>20</code></td><td>Results per page</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://api.billpadi.com/api/v1/partner/giftcards/products?type=buy&page=1&limit=20" \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://partner-api.billpadi.com/api/v1/partner/giftcards/products?type=buy&page=1&limit=20" \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Gift cards retrieved successfully",
@@ -132,7 +133,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>giftCardId</td><td>string (ObjectId)</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal ID from products catalog</td></tr><tr><td>productId</td><td>string (ObjectId)</td><td><span class="req-no">optional</span></td><td>Optional variant ID (if card has specific denominations)</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Card face value in foreign currency (e.g. <code>50</code> USD)</td></tr><tr><td>quantity</td><td>integer</td><td><span class="req-yes">required</span></td><td>Number of cards (1 to 10)</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/giftcards/purchase \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/giftcards/purchase \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -178,7 +179,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>giftCardId</td><td>string (ObjectId)</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal ID</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">required</span></td><td>Face value of the card</td></tr><tr><td>quantity</td><td>integer</td><td><span class="req-yes">required</span></td><td>Number of cards (1 to 10)</td></tr><tr><td>cards</td><td>array&lt;string&gt;</td><td><span class="req-yes">required</span></td><td>1 to 10 URLs pointing to card front/back images or receipts</td></tr><tr><td>comment</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional redemption note (e.g. e-code details)</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string for idempotency</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/giftcards/sell \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/giftcards/sell \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \

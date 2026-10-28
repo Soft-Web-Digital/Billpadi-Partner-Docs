@@ -111,8 +111,9 @@
 
 <h2 id="request-lifecycle">A typical integration</h2>
 <ol>
-  <li>Register at <code>POST /partner/auth/register</code> and wait for partner account approval &mdash; see <a href="getting-started.html">Getting Started</a>.</li>
-  <li>Log in to your partner portal or use your session token to generate an API key and retrieve your secret via <code>POST /partner/api-keys</code>.</li>
+  <li>Register at <code>POST /partner/auth/register</code> (account activates immediately &mdash; no waiting period) &mdash; see <a href="getting-started.html">Getting Started</a>.</li>
+  <li>Check your active API scopes and KYC Level under <strong>Settings &rarr; Developer &amp; API</strong> in the Billpadi Web App or via <code>GET /partner/scopes</code>.</li>
+  <li>Generate your API key pair in Settings or via <code>POST /partner/api-keys</code>, and configure your IP whitelist.</li>
   <li>Sign every write request with your secret &mdash; see <a href="authentication.html">Authentication &amp; Signing</a>.</li>
   <li>Configure your webhook endpoint via <code>PATCH /partner/webhook</code> to receive real-time notifications for completed transactions &mdash; see <a href="webhooks.html">Webhooks</a>.</li>
   <li>Handle responses, pagination envelopes, and rate limits gracefully &mdash; see <a href="errors.html">Errors &amp; Status Codes</a> and <a href="rate-limits.html">Rate Limits</a>.</li>

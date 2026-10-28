@@ -68,7 +68,7 @@
       <article class="article">
 <div class="eyebrow">Guide</div>
 <h1>Authentication &amp; signing</h1>
-<p class="lede">Three layers of enterprise defense: network-level IP whitelisting, an API key for route authorization, and a cryptographic HMAC-SHA256 signature on every financial and state-modifying request.</p>
+<p class="lede">Four layers of enterprise defense: network-level IP whitelisting, an API key for route authorization, cryptographic HMAC-SHA256 signature verification, and dynamic KYC tier &amp; document scope gating.</p>
 
 <h2 id="ip-whitelist">Layer 1 &mdash; IP whitelisting</h2>
 <p>Billpadi enforces network-level origin IP authorization. You can configure your servers' static IPv4, IPv6, or CIDR blocks via <a href="account.html#ip-whitelist"><code>PUT /partner/ip-whitelist</code></a> or your partner portal. When configured, incoming requests originating from any IP outside your whitelist are dropped with <code>403 Forbidden (AUTHORIZATION_ERROR)</code>.</p>
@@ -113,7 +113,7 @@ const rawBody = JSON.stringify(payload);
 const timestamp = Date.now().toString();
 const signature = signRequest(apiSecret, timestamp, rawBody);
 
-const res = await fetch("https://api.billpadi.com/api/v1/partner/airtime/purchase", {
+const res = await fetch("https://partner-api.billpadi.com/api/v1/partner/airtime/purchase", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -145,7 +145,7 @@ message = f"{timestamp}.{raw_body}"
 signature = hmac.new(api_secret.encode(), message.encode(), hashlib.sha256).hexdigest()
 
 res = requests.post(
-    "https://api.billpadi.com/api/v1/partner/airtime/purchase",
+    "https://partner-api.billpadi.com/api/v1/partner/airtime/purchase",
     data=raw_body,
     headers={
         "Content-Type": "application/json",
@@ -169,7 +169,7 @@ $timestamp = (string) round(microtime(true) * 1000);
 $message = "{$timestamp}.{$rawBody}";
 $signature = hash_hmac("sha256", $message, $apiSecret);
 
-$ch = curl_init("https://api.billpadi.com/api/v1/partner/airtime/purchase");
+$ch = curl_init("https://partner-api.billpadi.com/api/v1/partner/airtime/purchase");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $rawBody);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -185,7 +185,7 @@ curl_close($ch);
 TIMESTAMP=$(($(date +%s%N)/1000000))
 SIGNATURE=$(printf "%s.%s" "$TIMESTAMP" "$BODY" | openssl dgst -sha256 -hmac "$API_SECRET" | sed "s/^.* //")
 
-curl -X POST https://api.billpadi.com/api/v1/partner/airtime/purchase \
+curl -X POST https://partner-api.billpadi.com/api/v1/partner/airtime/purchase \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -197,6 +197,61 @@ curl -X POST https://api.billpadi.com/api/v1/partner/airtime/purchase \
 
 <h3 id="idempotency">Idempotency &amp; partner references</h3>
 <p>Every transaction write endpoint requires a unique <code>partnerReference</code> string (2 to 100 characters). This ensures safe retries and prevents double charges if network interruptions occur between your servers and ours.</p>
+
+<h2 id="scope-gating">Layer 4 &mdash; Dynamic KYC Tier &amp; Scope Gating</h2>
+<p>Every partner request is dynamically evaluated against your account's live scope permissions and approved compliance documents. Default baseline policies are summarized below:</p>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Scope</th>
+        <th>Baseline KYC Tier</th>
+        <th>Standard Documents</th>
+        <th>Permitted Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>catalog</code></td>
+        <td>Tier 1</td>
+        <td>None</td>
+        <td>Public listings (networks, DISCOs, packages, rates)</td>
+      </tr>
+      <tr>
+        <td><code>airtime</code>, <code>data</code>, <code>electricity</code>, <code>cabletv</code>, <code>betting</code>, <code>education</code></td>
+        <td>Tier 2</td>
+        <td>None (Requires verified BVN or NIN)</td>
+        <td>Utility and bill payments</td>
+      </tr>
+      <tr>
+        <td><code>giftcards</code></td>
+        <td>Tier 2</td>
+        <td>None (Requires verified BVN or NIN)</td>
+        <td>Gift card purchase and sale</td>
+      </tr>
+      <tr>
+        <td><code>payouts</code></td>
+        <td>Tier 2</td>
+        <td>None (Requires verified BVN or NIN)</td>
+        <td>Bank transfers and wallet withdrawals</td>
+      </tr>
+      <tr>
+        <td><code>crypto</code></td>
+        <td>Tier 3</td>
+        <td>Government ID, Proof of Address, CAC Certificate</td>
+        <td>Crypto Buy and Sell orders</td>
+      </tr>
+      <tr>
+        <td><code>kyc</code></td>
+        <td>Tier 3</td>
+        <td>Government ID, Proof of Address, CAC Certificate</td>
+        <td>Customer NIN and BVN identity verification APIs</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>If an endpoint is called before fulfilling the required tier or submitting the required documents, the API responds with <code>403 Forbidden</code> and machine-readable error code <code>KYC_REQUIREMENT_UNMET</code> detailing the missing requirements.</p>
+<div class="callout callout-info"><p><strong>Dynamic Authorization &amp; Single Source of Truth:</strong> Scope mappings and compliance requirements are configured dynamically on the platform. Inspect your live status, active tier, and any pending requirements directly in the web app under <strong>Settings &rarr; Developer &amp; API</strong>, or fetch them programmatically via <code>GET /partner/scopes</code>.</p></div>
 
 <div class="pagenav"><a href="getting-started.html"><span class="dir">&larr; Previous</span>Getting Started</a><a class="to-right" href="errors.html"><span class="dir">Next &rarr;</span>Errors &amp; Status Codes</a></div></article>
     </div>

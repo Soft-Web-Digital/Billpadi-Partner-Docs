@@ -83,9 +83,9 @@
   <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
 </div>
 
-<p>Returns your partner registration status, representative details, configured webhook URL, and your active <code>webhookSecret</code>:</p>
+<p>Returns your partner registration status, representative details, KYC tier, active scopes, configured webhook URL, and your active <code>webhookSecret</code>:</p>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/profile \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/profile \
   -H "Authorization: Bearer &lt;your-login-token&gt;"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Profile retrieved successfully",
@@ -95,6 +95,9 @@
     "lastname": "Obi",
     "email": "ada@merchro.com",
     "phone": "+2348012345678",
+    "kycTier": 2,
+    "bvnValidated": true,
+    "nin": "12345678901",
     "partner": {
       "companyName": "Merchro Ltd",
       "contactPerson": "Ada Obi",
@@ -103,10 +106,51 @@
       "webhookSecret": "a8f3b4c1d2e9876543210fedcba9876543210fedcba9876543210fedcba98765",
       "allowedIps": ["102.89.44.12", "197.210.55.0/24"],
       "createdAt": "2026-06-02T11:04:00.000Z"
-    }
+    },
+    "scopes": [
+      "airtime",
+      "data",
+      "electricity",
+      "cabletv",
+      "betting",
+      "education",
+      "giftcards",
+      "payouts"
+    ]
   },
   "timestamp": "2026-07-10T09:20:03.000Z",
   "path": "/api/v1/partner/profile"
+}</pre></div></div></div>
+
+<h2 id="scopes">API Scopes &amp; Capabilities</h2>
+
+<div class="endpoint">
+  <p class="endpoint-title">Get unlocked API scopes</p>
+  <div class="endpoint-row">
+    <span class="method method-get">GET</span>
+    <span class="path">/partner/scopes</span>
+  </div>
+  <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
+</div>
+
+<p>Returns the real-time list of service scopes enabled for your account based on your verified KYC Tier and approved business compliance documents. You can also inspect your live scopes, current KYC tier, and any pending requirements directly in the Billpadi Web App under <strong>Settings &rarr; Developer &amp; API</strong>.</p>
+
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/scopes \
+  -H "Authorization: Bearer &lt;your-login-token&gt;"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
+  "success": true,
+  "message": "Partner scopes retrieved successfully",
+  "data": [
+    "airtime",
+    "data",
+    "electricity",
+    "cabletv",
+    "betting",
+    "education",
+    "giftcards",
+    "payouts"
+  ],
+  "timestamp": "2026-07-10T09:20:03.000Z",
+  "path": "/api/v1/partner/scopes"
 }</pre></div></div></div>
 
 <h2 id="ip-whitelist">IP whitelist management</h2>
@@ -124,7 +168,7 @@
 
 <p>Send an array of exact IPv4/IPv6 addresses or CIDR blocks. Set to <code>[]</code> (empty array) to disable IP restrictions during sandbox testing:</p>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X PUT https://api.billpadi.com/api/v1/partner/ip-whitelist \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X PUT https://partner-api.billpadi.com/api/v1/partner/ip-whitelist \
   -H "Authorization: Bearer &lt;your-login-token&gt;" \
   -H "Content-Type: application/json" \
   -d '{
@@ -132,7 +176,7 @@
       "102.89.44.12",
       "197.210.55.0/24"
     ]
-  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await fetch("https://api.billpadi.com/api/v1/partner/ip-whitelist", {
+  }'</pre></div><div class="code-panel "><button class="copy-btn">copy</button><pre>const res = await fetch("https://partner-api.billpadi.com/api/v1/partner/ip-whitelist", {
   method: "PUT",
   headers: {
     "Authorization": "Bearer <your-login-token>",
@@ -209,7 +253,7 @@ const data = await res.json();</pre></div></div><div class="response-tag"><span 
   <div class="badges"><span class="badge req-jwt">Dashboard Bearer Auth</span></div>
 </div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/wallet \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/wallet \
   -H "Authorization: Bearer &lt;your-login-token&gt;"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Wallet retrieved successfully",

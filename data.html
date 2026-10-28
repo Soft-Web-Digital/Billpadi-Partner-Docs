@@ -73,6 +73,7 @@
 <div class="receipt">
   <div class="receipt-row"><span>Base path</span><b>/api/v1/partner/data</b></div>
   <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on purchase)</b></div>
+  <div class="receipt-row"><span>Required Scope</span><b><code>data</code> &middot; <a href="account.html#scopes">Check requirements in Settings &rarr;</a></b></div>
   <div class="receipt-row"><span>Network Slugs</span><b><code>mtn</code> &middot; <code>airtel</code> &middot; <code>glo</code> &middot; <code>9mobile</code></b></div>
   <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
 </div>
@@ -89,7 +90,7 @@
   <div class="badges"><span class="badge req-key">API key only</span></div>
 </div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/data/networks \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/data/networks \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Networks retrieved",
@@ -117,7 +118,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Query Param</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>serviceId</td><td>string</td><td><span class="req-yes">required</span></td><td>Network slug (e.g. <code>mtn</code>, <code>airtel</code>, <code>glo</code>, <code>9mobile</code>) or MongoDB ObjectId</td></tr><tr><td>dataType</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional filter: <code>SME</code>, <code>GIFTING</code>, <code>CORPORATE</code></td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://api.billpadi.com/api/v1/partner/data/products?serviceId=mtn" \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl "https://partner-api.billpadi.com/api/v1/partner/data/products?serviceId=mtn" \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Products retrieved",
@@ -163,7 +164,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>phone</td><td>string</td><td><span class="req-yes">required</span></td><td>Recipient 11-digit phone number (e.g. <code>08012345678</code>)</td></tr><tr><td>productId</td><td>string</td><td><span class="req-yes">required</span></td><td>Product <code>id</code> or slug <code>code</code> from the products catalog</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference string (2&ndash;100 characters) for idempotency</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/data/purchase \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div><div class="code-tab ">Node.js</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/data/purchase \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \

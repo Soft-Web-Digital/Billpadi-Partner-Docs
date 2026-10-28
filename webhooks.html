@@ -84,7 +84,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>webhookUrl</td><td>string (URL)</td><td><span class="req-yes">required</span></td><td>Publicly reachable HTTPS URL (e.g. <code>https://api.yourdomain.com/webhooks/billpadi</code>)</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X PATCH https://api.billpadi.com/api/v1/partner/webhook \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X PATCH https://partner-api.billpadi.com/api/v1/partner/webhook \
   -H "Authorization: Bearer &lt;your-login-token&gt;" \
   -H "Content-Type: application/json" \
   -d '{"webhookUrl": "https://api.yourdomain.com/webhooks/billpadi"}'</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{

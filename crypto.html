@@ -73,9 +73,12 @@
 <div class="receipt">
   <div class="receipt-row"><span>Base Path</span><b>/api/v1/partner/crypto</b></div>
   <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on buy/sell)</b></div>
+  <div class="receipt-row"><span>Required Scope</span><b><code>crypto</code> (for Buy/Sell) &middot; <a href="account.html#scopes">Check requirements in Settings &rarr;</a></b></div>
   <div class="receipt-row"><span>Supported Assets</span><b>BTC, ETH, USDT (TRC20, ERC20, BEP20), USDC</b></div>
   <div class="receipt-row"><span>Webhooks</span><b><code>crypto.purchase.success</code> &middot; <code>crypto.sale.approved</code> &middot; <code>crypto.sale.declined</code></b></div>
 </div>
+
+<div class="callout callout-info"><p><strong>Access &amp; Scope Requirement:</strong> While asset listings and rate feeds are publicly readable with any active API key (<code>catalog</code> scope), executing <code>POST /crypto/buy</code> or <code>POST /crypto/sell</code> requires the <code>crypto</code> scope. Compliance requirements are evaluated dynamically &mdash; inspect your active capabilities and missing items directly in the web app under <strong>Settings &rarr; Developer &amp; API</strong> or via <code>GET /partner/scopes</code>.</p></div>
 
 <h2 id="catalog">1. Asset Catalog &amp; Rates</h2>
 
@@ -88,7 +91,7 @@
   <div class="badges"><span class="badge req-key">API Key only</span></div>
 </div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/crypto \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/crypto \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Cryptocurrencies retrieved successfully",
@@ -121,7 +124,7 @@
   <div class="badges"><span class="badge req-key">API Key only</span></div>
 </div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://api.billpadi.com/api/v1/partner/crypto/rates \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl https://partner-api.billpadi.com/api/v1/partner/crypto/rates \
   -H "x-api-key: $API_KEY"</pre></div></div><div class="response-tag"><span class="chip"></span>Example response &mdash; 200 OK</div><div class="code-body"><div class="code-panel active" style="display:block;border-top:1px dashed #24302A;"><button class="copy-btn">copy</button><pre>{
   "success": true,
   "message": "Crypto rates retrieved successfully",
@@ -152,7 +155,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>cryptoId</td><td>string (ObjectId)</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal ID of the cryptocurrency</td></tr><tr><td>tradeType</td><td>string</td><td><span class="req-yes">required</span></td><td><code>buy</code> or <code>sell</code></td></tr><tr><td>networkId</td><td>string</td><td><span class="req-yes">required</span></td><td>Selected blockchain network (e.g. <code>net_trc20</code>)</td></tr><tr><td>cryptoAmount</td><td>number</td><td><span class="req-yes">either/or</span></td><td>Amount in crypto units (e.g. <code>100</code>)</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">either/or</span></td><td>Amount in NGN fiat (alternative to cryptoAmount)</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/crypto/breakdown \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/crypto/breakdown \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -d '{
@@ -188,7 +191,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>cryptoId</td><td>string (ObjectId)</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal ID</td></tr><tr><td>networkId</td><td>string</td><td><span class="req-yes">required</span></td><td>Blockchain network ID</td></tr><tr><td>walletAddress</td><td>string</td><td><span class="req-yes">required</span></td><td>Destination blockchain wallet address</td></tr><tr><td>cryptoAmount</td><td>number</td><td><span class="req-yes">either/or</span></td><td>Crypto units to buy</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">either/or</span></td><td>Equivalent NGN fiat to spend</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference for idempotency</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/crypto/buy \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/crypto/buy \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
@@ -229,7 +232,7 @@
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>cryptoId</td><td>string (ObjectId)</td><td><span class="req-yes">required</span></td><td>24-character hexadecimal ID</td></tr><tr><td>networkId</td><td>string</td><td><span class="req-yes">required</span></td><td>Deposit blockchain network</td></tr><tr><td>cryptoAmount</td><td>number</td><td><span class="req-yes">either/or</span></td><td>Crypto units to sell</td></tr><tr><td>amount</td><td>number</td><td><span class="req-yes">either/or</span></td><td>Equivalent NGN fiat expected</td></tr><tr><td>bankAccountId</td><td>string</td><td><span class="req-no">optional</span></td><td>Optional saved payout account (if disbursing directly to bank)</td></tr><tr><td>partnerReference</td><td>string</td><td><span class="req-yes">required</span></td><td>Unique reference for idempotency</td></tr></tbody></table></div>
 
-<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://api.billpadi.com/api/v1/partner/crypto/sell \
+<div class="code-card"><div class="code-tabs"><div class="code-tab active">cURL</div></div><div class="code-body"><div class="code-panel active"><button class="copy-btn">copy</button><pre>curl -X POST https://partner-api.billpadi.com/api/v1/partner/crypto/sell \
   -H "Content-Type: application/json" \
   -H "x-api-key: $API_KEY" \
   -H "x-timestamp: $TIMESTAMP" \
