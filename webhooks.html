@@ -244,6 +244,45 @@ echo json_encode(["received" => true]);
   <li>You can inspect all dispatch attempts, response codes, and payloads in real time via <code>GET /partner/webhooks</code>.</li>
 </ul>
 
+<h2 id="requery-backup">Best practice: Dual-track reliability (Requery as backup)</h2>
+<p>While webhooks deliver fast, push-based transaction notifications, temporary network disruptions, firewall policies, or server deployment downtime can occasionally prevent a webhook from reaching your application. To ensure maximum reliability and prevent transactions from being left unresolved, we recommend implementing a <strong>dual-track reconciliation strategy</strong>:</p>
+
+<div class="callout callout-info"><p><strong>The Golden Rule:</strong> Treat webhooks as your <em>primary real-time event trigger</em>, and use scheduled transaction requery (polling) as an <em>automated backup safety net</em> for any transaction that remains in <code>pending</code> status.</p></div>
+
+<h3>Recommended Requery Implementation</h3>
+<ol>
+  <li><strong>Instant Settlement:</strong> If an API response returns <code>"status": "success"</code> synchronously, fulfill the request immediately.</li>
+  <li><strong>Pending Queue:</strong> If an API response returns <code>"status": "pending"</code> (common for electricity token generation, blockchain confirmations, or carrier queues), save the transaction reference and await the real-time webhook.</li>
+  <li><strong>Backup Polling Fallback:</strong> If no webhook is received within <strong>60 to 120 seconds</strong>, run an automated background worker (e.g. queue worker or cron) to poll the corresponding product transaction status endpoint with exponential backoff (e.g., at 1 min, 3 min, 10 min, and 30 min).</li>
+  <li><strong>Idempotency Guard:</strong> Ensure your internal database update logic is idempotent. Whichever resolves first &mdash; the webhook or the requery response &mdash; safely updates the transaction to its terminal state without duplicate actions.</li>
+</ol>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Product Service</th>
+        <th>Status / Requery Endpoint</th>
+        <th>Key Fulfillment Data Returned</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Airtime</td><td><code>GET /partner/airtime/transactions/:reference</code></td><td>Delivery status, phone, network, amount</td></tr>
+      <tr><td>Mobile Data</td><td><code>GET /partner/data/transactions/:reference</code></td><td>Delivery status, phone, plan, network</td></tr>
+      <tr><td>Electricity</td><td><code>GET /partner/electricity/transactions/:reference</code></td><td><strong>Prepaid meter token</strong>, units, customer name</td></tr>
+      <tr><td>Cable TV</td><td><code>GET /partner/cabletv/transactions/:reference</code></td><td>Renewal status, smartcard number, package</td></tr>
+      <tr><td>Betting</td><td><code>GET /partner/betting/transactions/:reference</code></td><td>Funding status, customer ID, provider</td></tr>
+      <tr><td>Education</td><td><code>GET /partner/education/transactions/:reference</code></td><td><strong>Exam registration PIN(s)</strong></td></tr>
+      <tr><td>Gift Cards</td><td><code>GET /partner/giftcards/transactions/:transactionRef</code></td><td>Trade status, approved amount, settlement rate</td></tr>
+      <tr><td>Crypto Trading</td><td><code>GET /partner/crypto/transactions/:reference</code></td><td>Deposit confirmation, txHash, fiat amount</td></tr>
+      <tr><td>International Airtime</td><td><code>GET /partner/intl-airtime/transactions/:reference</code></td><td>Delivery status, operator, recipient phone</td></tr>
+      <tr><td>International Data</td><td><code>GET /partner/intl-data/transactions/:reference</code></td><td>Delivery status, product code, recipient phone</td></tr>
+      <tr><td>Identity (KYC)</td><td><code>GET /partner/kyc/transactions/:reference</code></td><td>Verification status, confidence match, reference</td></tr>
+      <tr><td>Bank Payouts</td><td>Webhooks (<code>withdrawal.success</code> / <code>failed</code>)</td><td>Settlement status, bank name, NIP session ID</td></tr>
+    </tbody>
+  </table>
+</div>
+
 <div class="pagenav"><a href="rate-limits.html"><span class="dir">&larr; Previous</span>Rate Limits</a><a class="to-right" href="account.html"><span class="dir">Next &rarr;</span>Account &amp; Dashboard</a></div></article>
     </div>
   </main>

@@ -78,7 +78,7 @@
   <div class="receipt-row"><span>Rate limit</span><b>30 requests / 60s (failure circuit breaker)</b></div>
 </div>
 
-<div class="callout callout-info"><p><strong>Access &amp; Scope Requirement:</strong> Calling customer identity verification APIs requires the <code>kyc</code> scope. Compliance requirements are configured dynamically per partner account &mdash; review your active scopes and missing verification items in the web app under <strong>Settings &rarr; Developer &amp; API</strong> or via <code>GET /partner/scopes</code>.</p></div>
+<div class="callout callout-info"><p><strong>Access &amp; Scope Requirement:</strong> Calling customer identity verification APIs requires the <code>kyc_lookup</code> scope (Tier 3 with verified corporate documents). To review what your account has access to or check the requirements to upgrade your tier, visit your dashboard at <a href="https://billpadi.com" target="_blank"><strong>billpadi.com</strong></a> under <strong>Settings &rarr; Developer &amp; API</strong> or query <code>GET /partner/scopes</code>.</p></div>
 
 <h2 id="verify-identity">Verify Customer Identity</h2>
 <p>Perform an identity verification query by passing the customer's BVN or NIN along with their legal name and date of birth:</p>

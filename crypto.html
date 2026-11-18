@@ -78,7 +78,7 @@
   <div class="receipt-row"><span>Webhooks</span><b><code>crypto.purchase.success</code> &middot; <code>crypto.sale.approved</code> &middot; <code>crypto.sale.declined</code></b></div>
 </div>
 
-<div class="callout callout-info"><p><strong>Access &amp; Scope Requirement:</strong> While asset listings and rate feeds are publicly readable with any active API key (<code>catalog</code> scope), executing <code>POST /crypto/buy</code> or <code>POST /crypto/sell</code> requires the <code>crypto</code> scope. Compliance requirements are evaluated dynamically &mdash; inspect your active capabilities and missing items directly in the web app under <strong>Settings &rarr; Developer &amp; API</strong> or via <code>GET /partner/scopes</code>.</p></div>
+<div class="callout callout-info"><p><strong>Access &amp; Scope Requirement:</strong> While asset listings and rate feeds are publicly readable with any active API key (<code>public</code> scope), executing <code>POST /crypto/buy</code> or <code>POST /crypto/sell</code> requires the <code>crypto</code> scope (Tier 3 with verified corporate documents). To review what your account has access to or check tier requirements, visit your dashboard at <a href="https://billpadi.com" target="_blank"><strong>billpadi.com</strong></a> under <strong>Settings &rarr; Developer &amp; API</strong> or query <code>GET /partner/scopes</code>.</p></div>
 
 <h2 id="catalog">1. Asset Catalog &amp; Rates</h2>
 
@@ -218,8 +218,10 @@
   "path": "/api/v1/partner/crypto/buy"
 }</pre></div></div></div>
 
-<h2 id="sell">4. Sell Crypto</h2>
-<p>Initiate a sell order to receive a dedicated deposit address. Once the crypto arrives on-chain and confirms, your NGN wallet is automatically credited:</p>
+<h2 id="sell">4. Sell Crypto &amp; Crypto-to-Naira Payments</h2>
+<p>Use this endpoint to sell crypto or enable a <strong>Pay with Crypto</strong> payment rail for your customers to pay in crypto and settle in Nigerian Naira (NGN). Initiating a sale order generates a dedicated blockchain deposit address. Once the crypto arrives on-chain and confirms, the equivalent Naira (NGN) amount is automatically credited directly to your Billpadi Naira wallet balance (or disbursed directly to your linked Nigerian bank account if <code>bankAccountId</code> is provided):</p>
+
+<div class="callout callout-info"><p><strong>Automated Naira Settlement:</strong> When you or your customer transfers cryptocurrency to the returned deposit address, Billpadi monitors blockchain confirmations, applies the quoted exchange rate, and automatically settles the payout in Nigerian Naira (NGN). Funds land immediately in your primary account balance and trigger a <code>crypto.sale.approved</code> webhook notification.</p></div>
 
 <div class="endpoint">
   <p class="endpoint-title">Initiate crypto sale</p>

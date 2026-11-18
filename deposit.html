@@ -73,9 +73,11 @@
 <div class="receipt">
   <div class="receipt-row"><span>Base Path</span><b>/api/v1/partner/deposit</b></div>
   <div class="receipt-row"><span>Auth</span><b>x-api-key (+ x-signature on write actions)</b></div>
-  <div class="receipt-row"><span>Funding Methods</span><b>Dynamic Bank Transfer Checkout &middot; Dedicated Permanent Virtual Account</b></div>
+  <div class="receipt-row"><span>Funding Methods</span><b>Bank Checkout &middot; Virtual Account &middot; Crypto-to-Naira</b></div>
   <div class="receipt-row"><span>Webhook Event</span><b><code>deposit.success</code></b></div>
 </div>
+
+<div class="callout callout-info"><p><strong>Crypto Deposits (Pay with Crypto &rarr; Naira):</strong> You can also fund your wallet using cryptocurrency. Initiating a crypto sale via <code>POST /partner/crypto/sell</code> provides a dedicated blockchain deposit address; upon network confirmation, the equivalent Naira (NGN) is automatically credited to your primary wallet balance. See <a href="crypto.html#sell">Crypto Trading &rarr; Sell Crypto</a>.</p></div>
 
 <h2 id="method-1-checkout">Method 1 &mdash; Dynamic Bank Transfer Checkout</h2>
 <p>Initiate an on-demand deposit. Returns payment transfer details or an instant checkout session:</p>
